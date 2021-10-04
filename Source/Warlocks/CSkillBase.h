@@ -16,7 +16,7 @@ public:
 	// Sets default values for this component's properties
 	UCSkillBase();
 
-	/// Called from blueprint on client machine to start cooldown
+	/// Called from blueprint on client machine to start cooldown PREPARE PHASE
 	UFUNCTION(BlueprintCallable)
 		void BeginOnPrepare();
 
@@ -28,6 +28,54 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 		void onPrepareClient();
+
+	/// <summary>
+	///  END PREPARE PHASE	
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+		void BeginOnEndPrepare();
+
+	UFUNCTION(server, reliable)
+		virtual void onEndPrepareServer();
+
+	UFUNCTION(client, reliable)
+		void endPrepareClient();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void onEndPrepareClient();
+
+
+/// <summary>
+///  BEGIN CAST
+/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void BeginBeginCast();
+
+	UFUNCTION(server, reliable)
+	virtual void onBeginCastServer();
+
+	UFUNCTION(client, reliable)
+	void BeginCastClient();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void onBeginCastClient();
+
+/// <summary>
+///  AFTER CAST
+/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void BeginAfterCast();
+
+	UFUNCTION(server, reliable)
+		virtual void onAfterCastServer();
+
+	UFUNCTION(client, reliable)
+		void AfterCastClient();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void onAfterCastClient();
+
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
 
 protected:
 	// Called when the game starts
@@ -41,7 +89,12 @@ protected:
 		void writeToLogClient();
 
 	//properites
-	float _cooldown, _currentCooldown;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+		float _cooldown;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+		float _currentCooldown;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+		bool _isPrepared;
 
 public:
 	// Called every frame
