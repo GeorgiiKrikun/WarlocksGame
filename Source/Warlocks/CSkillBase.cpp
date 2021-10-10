@@ -3,6 +3,7 @@
 
 #include "CSkillBase.h"
 
+
 // Sets default values for this component's properties
 UCSkillBase::UCSkillBase()
 {
@@ -14,24 +15,24 @@ UCSkillBase::UCSkillBase()
 }
 
 
-void UCSkillBase::BeginOnPrepare()
+void UCSkillBase::BeginPREPARE()
 {
-	onPrepareServer();
+	onPREPAREServer();
 }
 
-void UCSkillBase::onPrepareServer_Implementation()
+void UCSkillBase::onPREPAREServer_Implementation()
 {
 	if (_currentCooldown < 0.01f) {
-		prepareClient();
+		PREPAREClient();
 	}
 }
 
-void UCSkillBase::prepareClient_Implementation()
+void UCSkillBase::PREPAREClient_Implementation()
 {
-	onPrepareClient();
+	onPREPAREClient();
 }
 
-void UCSkillBase::onPrepareClient_Implementation()
+void UCSkillBase::onPREPAREClient_Implementation()
 {
 	//DO nothing club
 }
@@ -74,63 +75,73 @@ void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	if (_currentCooldown > 0.0f) _currentCooldown -= DeltaTime;
 }
 
-void UCSkillBase::BeginOnEndPrepare()
+void UCSkillBase::BeginENDPREPARE()
 {
-	onEndPrepareServer();
+	onENDPREPAREServer();
 }
 
 
-void UCSkillBase::onEndPrepareServer_Implementation()
+void UCSkillBase::onENDPREPAREServer_Implementation()
 {
-	endPrepareClient();
+	ENDPREPAREClient();
 }
 
-void UCSkillBase::endPrepareClient_Implementation()
+void UCSkillBase::ENDPREPAREClient_Implementation()
 {
-	onEndPrepareClient();
+	onENDPREPAREClient();
 }
 
-void UCSkillBase::onEndPrepareClient_Implementation()
+void UCSkillBase::onENDPREPAREClient_Implementation()
 {
 }
 
-void UCSkillBase::BeginBeginCast()
+void UCSkillBase::BeginBEGINCAST()
 {
-	onBeginCastServer();
+	onBEGINCASTServer();
 }
 
-void UCSkillBase::onBeginCastServer_Implementation()
+void UCSkillBase::onBEGINCASTServer_Implementation()
 {
-	BeginCastClient();
+	BEGINCASTClient();
 }
 
-void UCSkillBase::BeginCastClient_Implementation()
+void UCSkillBase::BEGINCASTClient_Implementation()
 {
-	onBeginCastClient();
+	onBEGINCASTClient();
 }
 
-void UCSkillBase::onBeginCastClient_Implementation()
+void UCSkillBase::onBEGINCASTClient_Implementation()
 {
 
 }
 
-void UCSkillBase::BeginAfterCast()
+void UCSkillBase::BeginAFTERCAST()
 {
-	onAfterCastServer();
+	onAFTERCASTServer();
 }
 
-void UCSkillBase::onAfterCastServer_Implementation()
+void UCSkillBase::onAFTERCASTServer_Implementation()
 {
 	_currentCooldown = _cooldown;
-	AfterCastClient();
+	/*ACharacter* casted = Cast<ACharacter>(GetOwner());
+	FVector location = casted->GetActorLocation();
+	AController* controller = casted->GetController();
+
+	FTimerHandle handle;
+
+	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
+		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f);
+		AFTERCASTClient();
+		}, 1.0f, 1);
+	*/
 }
 
-void UCSkillBase::AfterCastClient_Implementation()
+void UCSkillBase::AFTERCASTClient_Implementation()
 {
-	onAfterCastClient();
+	onAFTERCASTClient();
 }
 
-void UCSkillBase::onAfterCastClient_Implementation()
+void UCSkillBase::onAFTERCASTClient_Implementation()
 {
 
 }

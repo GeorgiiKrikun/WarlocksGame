@@ -18,62 +18,62 @@ public:
 
 	/// Called from blueprint on client machine to start cooldown PREPARE PHASE
 	UFUNCTION(BlueprintCallable)
-		void BeginOnPrepare();
+		void BeginPREPARE();
 
 	UFUNCTION(server, reliable)
-		virtual void onPrepareServer();
+		virtual void onPREPAREServer();
 
 	UFUNCTION(client, reliable)
-		void prepareClient();
+		void PREPAREClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void onPrepareClient();
+		void onPREPAREClient();
 
 	/// <summary>
 	///  END PREPARE PHASE	
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
-		void BeginOnEndPrepare();
+		void BeginENDPREPARE();
 
 	UFUNCTION(server, reliable)
-		virtual void onEndPrepareServer();
+		virtual void onENDPREPAREServer();
 
 	UFUNCTION(client, reliable)
-		void endPrepareClient();
+		void ENDPREPAREClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void onEndPrepareClient();
+		void onENDPREPAREClient();
 
 
 /// <summary>
 ///  BEGIN CAST
 /// </summary>
 	UFUNCTION(BlueprintCallable)
-	void BeginBeginCast();
+	void BeginBEGINCAST();
 
 	UFUNCTION(server, reliable)
-	virtual void onBeginCastServer();
+	virtual void onBEGINCASTServer();
 
 	UFUNCTION(client, reliable)
-	void BeginCastClient();
+	void BEGINCASTClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void onBeginCastClient();
+	void onBEGINCASTClient();
 
 /// <summary>
 ///  AFTER CAST
 /// </summary>
 	UFUNCTION(BlueprintCallable)
-	void BeginAfterCast();
+	void BeginAFTERCAST();
 
 	UFUNCTION(server, reliable)
-		virtual void onAfterCastServer();
+		virtual void onAFTERCASTServer();
 
 	UFUNCTION(client, reliable)
-		void AfterCastClient();
+		void AFTERCASTClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void onAfterCastClient();
+		void onAFTERCASTClient();
 
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
 
