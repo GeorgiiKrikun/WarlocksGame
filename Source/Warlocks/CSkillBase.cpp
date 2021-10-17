@@ -123,17 +123,7 @@ void UCSkillBase::BeginAFTERCAST()
 void UCSkillBase::onAFTERCASTServer_Implementation()
 {
 	_currentCooldown = _cooldown;
-	/*ACharacter* casted = Cast<ACharacter>(GetOwner());
-	FVector location = casted->GetActorLocation();
-	AController* controller = casted->GetController();
 
-	FTimerHandle handle;
-
-	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
-		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f);
-		AFTERCASTClient();
-		}, 1.0f, 1);
-	*/
 }
 
 void UCSkillBase::AFTERCASTClient_Implementation()
