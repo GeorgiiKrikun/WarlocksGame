@@ -26,8 +26,10 @@ void USacrificeBase::onAFTERCASTServer_Implementation()
 	FTimerHandle handle;
 
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
-		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, TArray<AActor*>());
+		TArray<AActor*> ingnoredActors;
+		ingnoredActors.Add(GetOwner());
+		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors);
 		AFTERCASTClient();
-		}, 1.0f, 1);
+		}, 1.0f, false);
 
 }
