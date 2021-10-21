@@ -15,11 +15,25 @@ public:
 	// Sets default values for this character's properties
 	ACWarlockChar();
 
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+
 protected:
-	// Called when the game starts or when spawned
+	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+
+
+	//properites
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+		float _HP;
+
+
+	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+
+	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

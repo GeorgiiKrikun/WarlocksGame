@@ -23,8 +23,9 @@ void USacrificeBase::onAFTERCASTServer_Implementation()
 	FVector location = casted->GetActorLocation();
 	AController* controller = casted->GetController();
 
-	FTimerHandle handle;
+	_isPreparing = false;
 
+	FTimerHandle handle;
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
 		TArray<AActor*> ingnoredActors;
 		ingnoredActors.Add(GetOwner());

@@ -95,6 +95,11 @@ protected:
 		float _currentCooldown;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 		bool _isPrepared;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+		bool _isPreparing;
+
+
+
 
 public:
 	// Called every frame

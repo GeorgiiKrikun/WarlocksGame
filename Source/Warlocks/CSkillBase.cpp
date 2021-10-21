@@ -12,6 +12,8 @@ UCSkillBase::UCSkillBase()
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicated(true);
 
+	_isPreparing = false;
+
 }
 
 
@@ -22,8 +24,9 @@ void UCSkillBase::BeginPREPARE()
 
 void UCSkillBase::onPREPAREServer_Implementation()
 {
-	if (_currentCooldown < 0.01f) {
+	if ((_currentCooldown < 0.01f) && (!_isPreparing) && (!_isPrepared)) {
 		PREPAREClient();
+		_isPreparing = true;
 	}
 }
 
@@ -84,6 +87,7 @@ void UCSkillBase::BeginENDPREPARE()
 void UCSkillBase::onENDPREPAREServer_Implementation()
 {
 	ENDPREPAREClient();
+	_isPreparing = false;
 }
 
 void UCSkillBase::ENDPREPAREClient_Implementation()
