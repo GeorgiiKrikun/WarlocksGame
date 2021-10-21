@@ -96,4 +96,13 @@ Content/ParagonSevarog/*
 Content/DynamicGrassLite/*
 Content/Mixamo/*
 
+#CLion shit
+.idea/*
+
+#VSCode shit
+.vscode/c_cpp_properties.json
+
+#Cmake shit
+CMakeLists.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/unrealengine
