@@ -49,16 +49,16 @@ public:
 ///  BEGIN CAST
 /// </summary>
 	UFUNCTION(BlueprintCallable)
-	void BeginBEGINCAST();
+	void BeginBEGINCAST(FVector location, FVector direction);
 
 	UFUNCTION(server, reliable)
-	virtual void onBEGINCASTServer();
+	virtual void onBEGINCASTServer(FVector location, FVector direction);
 
 	UFUNCTION(client, reliable)
-	void BEGINCASTClient();
+	void BEGINCASTClient(FVector location, FVector direction);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void onBEGINCASTClient();
+	void onBEGINCASTClient(FVector location, FVector direction);
 
 /// <summary>
 ///  AFTER CAST
@@ -67,13 +67,13 @@ public:
 	void BeginAFTERCAST();
 
 	UFUNCTION(server, reliable)
-		virtual void onAFTERCASTServer();
+    virtual void onAFTERCASTServer();
 
 	UFUNCTION(client, reliable)
-		void AFTERCASTClient();
+	void AFTERCASTClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void onAFTERCASTClient();
+	void onAFTERCASTClient();
 
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
 
@@ -97,6 +97,9 @@ protected:
 		bool _isPrepared;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 		bool _isPreparing;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) // Only client size thing
+		FVector _clickLocation;
+
 
 
 

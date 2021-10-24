@@ -37,7 +37,7 @@ void UCSkillBase::PREPAREClient_Implementation()
 
 void UCSkillBase::onPREPAREClient_Implementation()
 {
-	//DO nothing club
+
 }
 
 
@@ -99,22 +99,22 @@ void UCSkillBase::onENDPREPAREClient_Implementation()
 {
 }
 
-void UCSkillBase::BeginBEGINCAST()
+void UCSkillBase::BeginBEGINCAST(FVector location, FVector direction)
 {
-	onBEGINCASTServer();
+	onBEGINCASTServer(location, direction);
 }
 
-void UCSkillBase::onBEGINCASTServer_Implementation()
+void UCSkillBase::onBEGINCASTServer_Implementation(FVector location, FVector direction)
 {
-	BEGINCASTClient();
+	BEGINCASTClient(location,direction);
 }
 
-void UCSkillBase::BEGINCASTClient_Implementation()
+void UCSkillBase::BEGINCASTClient_Implementation(FVector location, FVector direction)
 {
-	onBEGINCASTClient();
+	onBEGINCASTClient(location,direction);
 }
 
-void UCSkillBase::onBEGINCASTClient_Implementation()
+void UCSkillBase::onBEGINCASTClient_Implementation(FVector location, FVector direction)
 {
 
 }
