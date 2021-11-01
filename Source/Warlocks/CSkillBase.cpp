@@ -10,9 +10,8 @@ UCSkillBase::UCSkillBase()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	SetIsReplicated(true);
 
-	_isPreparing = false;
+
 
 }
 
@@ -50,6 +49,9 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 void UCSkillBase::BeginPlay()
 {
 	Super::BeginPlay();
+	_isPreparing = false;
+	SetIsReplicated(true);
+
 }
 
 void UCSkillBase::writeToLogServer_Implementation()
