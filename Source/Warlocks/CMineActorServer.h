@@ -4,20 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CFireballActorServer.generated.h"
+#include "CMineActorServer.generated.h"
 
-class UProjectileMovementComponent;
 class USphereComponent;
-//class UStaticMeshComponent;
 
 UCLASS()
-class WARLOCKS_API ACFireballActorServer : public AActor
+class WARLOCKS_API ACMineActorServer : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACFireballActorServer();
+	ACMineActorServer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,14 +31,9 @@ public:
 	UFUNCTION()
 	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UProjectileMovementComponent* ProjectileMovement() const { return _movement; }
 protected:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	UProjectileMovementComponent* _movement;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USphereComponent* _collisionSphere;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
-
-
 };

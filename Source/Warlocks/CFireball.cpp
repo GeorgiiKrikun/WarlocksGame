@@ -1,20 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CFireball.h"
 #include "CWarlockChar.h"
 #include "CFireballActorServer.h"
-
-
-
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Engine/ObjectLibrary.h"
-#include "AssetData.h"
-#include "Chaos/Array.h"
-#include "AssetRegistryModule.h"
-#
-
 
 void UCFireball::onBEGINCASTServer_Implementation(FVector location, FVector direction)
 {
@@ -31,7 +20,7 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 	FRotator spawnRotation = direction.ToOrientationRotator();
 		
 	if (warlock->HasAuthority()) {
-		ACFireballActorServer* spawnedFireball = GetWorld()->SpawnActor<ACFireballActorServer>(spawnLocation, spawnRotation);
+		ACFireballActorServer* spawnedFireball = GetWorld()->SpawnActor<ACFireballActorServer>(spawnLocation,spawnRotation);
 		spawnedFireball->ProjectileMovement()->SetVelocityInLocalSpace(FVector(1000.0f,0.0f,0.0f) );
 	}
 	else {
