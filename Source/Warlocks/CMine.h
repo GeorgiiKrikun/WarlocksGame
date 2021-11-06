@@ -18,18 +18,20 @@ class WARLOCKS_API UCMine : public UCSkillBase
 	
 public:
 
+	UCMine();
+
 	void onBEGINCASTServer_Implementation(FVector location, FVector direction) override;
 
-	UFUNCTION(NetMulticast)
+	UFUNCTION(NetMulticast,Reliable)
 	void SpawnMine(FVector location, FVector direction);
 
-	UFUNCTION(NetMulticast)
-	void DestroyAllMines();
+	UFUNCTION(NetMulticast, Reliable)
+	void DestroyAllMines(int32 num);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACMineActorServer> _mine;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	ACMineActorServer _spawnedMine;
+	TMap<int32, ACMineActorServer*> _spawnedMines;
+	int32 _currentActorSpawnedNumber;
 
 };

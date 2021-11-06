@@ -22,6 +22,10 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 	if (warlock->HasAuthority()) {
 		ACFireballActorServer* spawnedFireball = GetWorld()->SpawnActor<ACFireballActorServer>(spawnLocation,spawnRotation);
 		spawnedFireball->ProjectileMovement()->SetVelocityInLocalSpace(FVector(1000.0f,0.0f,0.0f) );
+		_spawnedFireballs.Add(_currentActorSpawnedNumber, spawnedFireball);
+		spawnedFireball->SetSkillThatSpawnedThisActor(this);
+		spawnedFireball->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
+		_currentActorSpawnedNumber++;
 	}
 	else {
 		if (!_fireball) {
@@ -30,7 +34,19 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 		AActor* spawnActor = GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation);
 		ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(spawnActor);
 		spawnedFireball->ProjectileMovement()->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
+		_spawnedFireballs.Add(_currentActorSpawnedNumber, spawnedFireball);
+		spawnedFireball->SetSkillThatSpawnedThisActor(this);
+		spawnedFireball->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
+		_currentActorSpawnedNumber++;
 	}
 
 	BEGINCASTClient(location, direction);
+}
+
+void UCFireball::DestroyAllMines_Implementation(int32 num)
+{
+	ACFireballActorServer** fireball = _spawnedFireballs.Find(num);
+	if (fireball) {
+		(*fireball)->Destroy();
+	}
 }

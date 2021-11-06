@@ -2,9 +2,9 @@
 
 
 #include "CMineActorServer.h"
+#include "CMine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
-
 
 // Sets default values
 ACMineActorServer::ACMineActorServer()
@@ -39,16 +39,27 @@ void ACMineActorServer::Tick(float DeltaTime)
 
 void ACMineActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//this->Destroy();
 	if (HasAuthority()) {
 		TArray<AActor*> ingnoredActors;
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors);
+		if (!_skillThatSpawnedThatActor) return;
+		_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
 	}
-	this->Destroy();
+
 }
 
 void ACMineActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
+}
+
+void ACMineActorServer::SetSkillThatSpawnedThisActor(UCMine* mine)
+{
+	_skillThatSpawnedThatActor = mine;
+}
+
+void ACMineActorServer::SetCorrespondingNumberOfThisActor(int32 num)
+{
+	_correspondingNumberOfThisActor = num;
 }
 

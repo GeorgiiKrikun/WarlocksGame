@@ -4,8 +4,9 @@
 #include "CFireballActorServer.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
-//#include "Components/StaticMeshComponent.h"
+#include "CFireball.h"
 #include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ACFireballActorServer::ACFireballActorServer() : Super()
@@ -54,8 +55,8 @@ void ACFireballActorServer::whenOverlapped(UPrimitiveComponent* overlappedCompon
 	if (HasAuthority()) {
 		TArray<AActor*> ingnoredActors;
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors);
+		_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
 	}
-	this->Destroy();
 
 }
 
@@ -63,5 +64,15 @@ void ACFireballActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedCom
 {
 	UE_LOG(LogTemp, Warning, TEXT("EndOverlap"));
 
+}
+
+void ACFireballActorServer::SetSkillThatSpawnedThisActor(UCFireball* mine)
+{
+	_skillThatSpawnedThatActor = mine;
+}
+
+void ACFireballActorServer::SetCorrespondingNumberOfThisActor(int32 num)
+{
+	_correspondingNumberOfThisActor = num;
 }
 

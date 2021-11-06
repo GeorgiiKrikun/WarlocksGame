@@ -8,6 +8,7 @@
 
 class UProjectileMovementComponent;
 class USphereComponent;
+class UCFireball;
 //class UStaticMeshComponent;
 
 UCLASS()
@@ -34,6 +35,9 @@ public:
 	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UProjectileMovementComponent* ProjectileMovement() const { return _movement; }
+
+	void SetSkillThatSpawnedThisActor(UCFireball* mine);
+	void SetCorrespondingNumberOfThisActor(int32 num);
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UProjectileMovementComponent* _movement;
@@ -42,5 +46,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
 
-
+	UCFireball* _skillThatSpawnedThatActor;
+	int32 _correspondingNumberOfThisActor;
 };

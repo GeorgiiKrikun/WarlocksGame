@@ -3,10 +3,17 @@
 #include "CMine.h"
 #include "CWarlockChar.h"
 #include "CMineActorServer.h"
+#include "Chaos/Map.h"
 
 void UCMine::onBEGINCASTServer_Implementation(FVector location, FVector direction)
 {
 	SpawnMine(location, direction);
+}
+
+UCMine::UCMine() : UCSkillBase(),
+	_currentActorSpawnedNumber(0)
+{
+
 }
 
 void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
@@ -19,13 +26,31 @@ void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
 	FRotator spawnRotation = direction.ToOrientationRotator();
 
 	if (warlock->HasAuthority()) {
-		ACMineActorServer* _spawnedMine = GetWorld()->SpawnActor<ACMineActorServer>(spawnLocation, spawnRotation);
+		ACMineActorServer* spawnedMine = GetWorld()->SpawnActor<ACMineActorServer>(spawnLocation, spawnRotation);
+		_spawnedMines.Add(_currentActorSpawnedNumber, spawnedMine);
+		spawnedMine->SetSkillThatSpawnedThisActor(this);
+		spawnedMine->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
+		_currentActorSpawnedNumber++;
+
 	} else {
 		if (!_mine) {
+			_currentActorSpawnedNumber++;
 			return;
 		}
-		ACMineActorServer* _spawnedMine = GetWorld()->SpawnActor(_mine, &spawnLocation, &spawnRotation);
+		ACMineActorServer* spawnedMine = Cast<ACMineActorServer>(GetWorld()->SpawnActor(_mine, &spawnLocation, &spawnRotation));
+		_spawnedMines.Add(_currentActorSpawnedNumber, spawnedMine);
+		spawnedMine->SetSkillThatSpawnedThisActor(this);
+		spawnedMine->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
+		_currentActorSpawnedNumber++;
 	}
 
 	BEGINCASTClient(location, direction);
+}
+
+void UCMine::DestroyAllMines_Implementation(int32 num)
+{
+	ACMineActorServer** mine = _spawnedMines.Find(num);
+	if (mine) {
+		(*mine)->Destroy();
+	}
 }

@@ -26,5 +26,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACFireballActorServer> _fireball;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void DestroyAllMines(int32 num);
+
+	TMap<int32, ACFireballActorServer*> _spawnedFireballs;
+	int32 _currentActorSpawnedNumber;
 
 };

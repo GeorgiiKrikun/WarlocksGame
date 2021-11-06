@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Templates/SubclassOf.h"
 #include "CMineActorServer.generated.h"
 
 class USphereComponent;
+class UCMine;
 
 UCLASS()
 class WARLOCKS_API ACMineActorServer : public AActor
@@ -31,9 +33,16 @@ public:
 	UFUNCTION()
 	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	void SetSkillThatSpawnedThisActor(UCMine* mine);
+
+	void SetCorrespondingNumberOfThisActor(int32 num);
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USphereComponent* _collisionSphere;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
+
+	UCMine* _skillThatSpawnedThatActor;
+	int32 _correspondingNumberOfThisActor;
 };
