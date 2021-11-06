@@ -11,7 +11,8 @@ void UCMine::onBEGINCASTServer_Implementation(FVector location, FVector directio
 }
 
 UCMine::UCMine() : UCSkillBase(),
-	_currentActorSpawnedNumber(0)
+	_currentActorSpawnedNumber(0),
+	_visibleOnThisInstance(false)
 {
 
 }
@@ -42,6 +43,11 @@ void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
 		spawnedMine->SetSkillThatSpawnedThisActor(this);
 		spawnedMine->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
 		_currentActorSpawnedNumber++;
+		if (_visibleOnThisInstance) {
+			spawnedMine->_visibleOnThisInstance = true;
+		}
+
+		spawnedMine->armVisibilityTimer();
 	}
 
 	BEGINCASTClient(location, direction);

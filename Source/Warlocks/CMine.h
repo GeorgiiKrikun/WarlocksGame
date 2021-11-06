@@ -31,6 +31,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACMineActorServer> _mine;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool _visibleOnThisInstance;
+
 	TMap<int32, ACMineActorServer*> _spawnedMines;
 	int32 _currentActorSpawnedNumber;
 

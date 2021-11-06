@@ -37,11 +37,18 @@ public:
 
 	void SetCorrespondingNumberOfThisActor(int32 num);
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool _visibleOnThisInstance = false;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void armVisibilityTimer();
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USphereComponent* _collisionSphere;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
+
 
 	UCMine* _skillThatSpawnedThatActor;
 	int32 _correspondingNumberOfThisActor;
