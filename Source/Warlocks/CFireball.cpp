@@ -46,7 +46,7 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 void UCFireball::DestroyAllMines_Implementation(int32 num)
 {
 	ACFireballActorServer** fireball = _spawnedFireballs.Find(num);
-	if (fireball) {
+	if (fireball && (*fireball)) {
 		(*fireball)->Destroy();
 	}
 }

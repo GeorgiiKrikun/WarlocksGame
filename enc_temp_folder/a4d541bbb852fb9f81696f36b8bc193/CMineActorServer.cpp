@@ -39,7 +39,7 @@ void ACMineActorServer::Tick(float DeltaTime)
 
 void ACMineActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (HasAuthority() && _skillThatSpawnedThatActor) {
+	if (HasAuthority()) {
 		TArray<AActor*> ingnoredActors;
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors);
 		if (!_skillThatSpawnedThatActor) return;

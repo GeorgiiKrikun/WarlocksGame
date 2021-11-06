@@ -52,10 +52,10 @@ void ACFireballActorServer::Tick(float DeltaTime)
 void ACFireballActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//this->Destroy();
-	if (HasAuthority() && _skillThatSpawnedThatActor) {
+	if (HasAuthority()) {
 		TArray<AActor*> ingnoredActors;
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors);
-		_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
+		if (_skillThatSpawnedThatActor) _skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
 	}
 
 }
