@@ -17,15 +17,22 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
 
+
+	float HealthPoints() const;
+	float MaxHealthPoints() const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 
-
 	//properites
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-		float _HP;
+	float _HealthPoints;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _MaxHealthPoints;
+
 
 
 	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;

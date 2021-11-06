@@ -3,18 +3,32 @@
 
 #include "CWarlockChar.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "GoglikeLogging.h"
+#include "Net/UnrealNetwork.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	_HP = 100;
+	_HealthPoints = 100.0f;
+	_MaxHealthPoints = 100.0f;
 }
 
 void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACWarlockChar, _HealthPoints);
+	DOREPLIFETIME(ACWarlockChar, _MaxHealthPoints);
+}
+
+float ACWarlockChar::HealthPoints() const
+{
+	return _HealthPoints;
+}
+
+float ACWarlockChar::MaxHealthPoints() const
+{
+	return _MaxHealthPoints;
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +42,8 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 {
 	if (HasAuthority()) {
 		Damage = Super::InternalTakeRadialDamage(Damage, RadialDamageEvent, EventInstigator, DamageCauser);
-		_HP -= Damage;
+		GL("DAMAGE TAKEN %f", Damage);
+		_HealthPoints = _HealthPoints - Damage;
 		FVector origin = RadialDamageEvent.Origin;
 		FVector actorLocation = GetActorLocation();
 		FVector directionNormalized = origin - actorLocation;
@@ -46,7 +61,7 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::InternalTakePointDamage(Damage, PointDamageEvent, EventInstigator, DamageCauser);
-	_HP -= Damage;
+	_HealthPoints = _HealthPoints - Damage;
 	return Damage;
 }
 

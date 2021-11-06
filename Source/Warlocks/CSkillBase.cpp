@@ -2,6 +2,7 @@
 
 
 #include "CSkillBase.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values for this component's properties
@@ -42,7 +43,9 @@ void UCSkillBase::onPREPAREClient_Implementation()
 
 void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UCSkillBase, _cooldown);
+	DOREPLIFETIME(UCSkillBase, _currentCooldown);
 }
 
 // Called when the game starts

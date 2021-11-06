@@ -50,7 +50,7 @@ void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
 		spawnedMine->armVisibilityTimer();
 	}
 
-	BEGINCASTClient(location, direction);
+	BeginAFTERCAST();
 }
 
 void UCMine::DestroyAllMines_Implementation(int32 num)

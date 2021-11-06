@@ -40,7 +40,7 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 		_currentActorSpawnedNumber++;
 	}
 
-	BEGINCASTClient(location, direction);
+	BeginAFTERCAST();
 }
 
 void UCFireball::DestroyAllMines_Implementation(int32 num)

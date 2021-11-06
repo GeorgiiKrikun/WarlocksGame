@@ -15,7 +15,6 @@ USacrificeBase::USacrificeBase()
 
 }
 
-
 void USacrificeBase::onAFTERCASTServer_Implementation()
 {
 	_currentCooldown = _cooldown;
