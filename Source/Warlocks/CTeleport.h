@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CSkillBase.h"
+#include "SkillParameters.h"
 #include "CTeleport.generated.h"
 
 /**
@@ -15,14 +16,19 @@ class WARLOCKS_API UCTeleport : public UCSkillBase
 	GENERATED_BODY()
 	
 public:
+
 	
-	void onBEGINCASTServer_Implementation(FVector location, FVector direction) override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _addZ = 80;
 
-
+	
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void ServerSkillCast_Implementation(FVector location = FVector()) override;
+
+
+	int getRequiredInputType() override;
 
 };

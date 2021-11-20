@@ -20,10 +20,9 @@ public:
 
 	UCMine();
 
-	void onBEGINCASTServer_Implementation(FVector location, FVector direction) override;
 
 	UFUNCTION(NetMulticast,Reliable)
-	void SpawnMine(FVector location, FVector direction);
+	void SpawnMine(FVector location);
 
 	UFUNCTION(NetMulticast, Reliable)
 	void DestroyAllMines(int32 num);
@@ -36,5 +35,10 @@ public:
 
 	TMap<int32, ACMineActorServer*> _spawnedMines;
 	int32 _currentActorSpawnedNumber;
+
+
+	void ServerSkillCast_Implementation(FVector location) override;
+
+	int getRequiredInputType() override;
 
 };

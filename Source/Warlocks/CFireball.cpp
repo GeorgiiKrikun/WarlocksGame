@@ -3,19 +3,15 @@
 #include "CFireball.h"
 #include "CWarlockChar.h"
 #include "CFireballActorServer.h"
+#include "GoglikeLogging.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
-void UCFireball::onBEGINCASTServer_Implementation(FVector location, FVector direction)
-{
-	SpawnFireball(location, direction);
-}
-
-void UCFireball::SpawnFireball_Implementation(FVector location, FVector direction)
+void UCFireball::SpawnFireball_Implementation(FVector location)
 {
 	auto warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	FVector warlockLocation = warlock->GetActorLocation();
-	direction = (location - warlockLocation).GetSafeNormal2D();
+	FVector direction = (location - warlockLocation).GetSafeNormal2D();
 	FVector spawnLocation = warlockLocation + 100.0f * direction;
 	FRotator spawnRotation = direction.ToOrientationRotator();
 		
@@ -40,7 +36,6 @@ void UCFireball::SpawnFireball_Implementation(FVector location, FVector directio
 		_currentActorSpawnedNumber++;
 	}
 
-	BeginAFTERCAST();
 }
 
 void UCFireball::DestroyAllMines_Implementation(int32 num)
@@ -49,4 +44,18 @@ void UCFireball::DestroyAllMines_Implementation(int32 num)
 	if (fireball && (*fireball)) {
 		(*fireball)->Destroy();
 	}
+}
+
+int UCFireball::getRequiredInputType()
+{
+	return 1;
+}
+
+void UCFireball::ServerSkillCast_Implementation(FVector location)
+{
+	if (_currentCooldown > 0.0f) return;
+	_currentCooldown = _cooldown;
+	GL("Fireball cooldowns %f %f", _currentCooldown, _cooldown);
+
+	SpawnFireball(location);
 }

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "SkillParameters.h"
 #include "CSkillBase.generated.h"
-
 
 UCLASS(Blueprintable, BlueprintType)
 class WARLOCKS_API UCSkillBase : public UActorComponent
@@ -16,91 +16,31 @@ public:
 	// Sets default values for this component's properties
 	UCSkillBase();
 
-	/// Called from blueprint on client machine to start cooldown PREPARE PHASE
-	UFUNCTION(BlueprintCallable)
-		void BeginPREPARE();
-
-	UFUNCTION(server, reliable)
-		virtual void onPREPAREServer();
-
-	UFUNCTION(client, reliable)
-		void PREPAREClient();
-
-	UFUNCTION(BlueprintNativeEvent)
-		void onPREPAREClient();
-
-	/// <summary>
-	///  END PREPARE PHASE	
-	/// </summary>
-	UFUNCTION(BlueprintCallable)
-		void BeginENDPREPARE();
-
-	UFUNCTION(server, reliable)
-		virtual void onENDPREPAREServer();
-
-	UFUNCTION(client, reliable)
-		void ENDPREPAREClient();
-
-	UFUNCTION(BlueprintNativeEvent)
-		void onENDPREPAREClient();
-
-
-/// <summary>
-///  BEGIN CAST
-/// </summary>
-	UFUNCTION(BlueprintCallable)
-	void BeginBEGINCAST(FVector location, FVector direction);
-
-	UFUNCTION(server, reliable)
-	virtual void onBEGINCASTServer(FVector location, FVector direction);
-
-	UFUNCTION(client, reliable)
-	void BEGINCASTClient(FVector location, FVector direction);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void onBEGINCASTClient(FVector location, FVector direction);
-
-/// <summary>
-///  AFTER CAST
-/// </summary>
-	UFUNCTION(BlueprintCallable)
-	void BeginAFTERCAST();
-
-	UFUNCTION(server, reliable)
-    virtual void onAFTERCASTServer();
-
-	UFUNCTION(client, reliable)
-	void AFTERCASTClient();
-
-	UFUNCTION(BlueprintNativeEvent)
-	void onAFTERCASTClient();
-
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	virtual void ServerSkillCast(FVector location);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void BeginPreparation();
+
+
+	/**
+	* Returns input type required for that skill. 0 = no input, 1 - one-vector input
+	*/
+	UFUNCTION(BlueprintCallable)
+	virtual int getRequiredInputType();
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UFUNCTION(server, unreliable, BlueprintCallable)
-		void writeToLogServer();
-
-
-	UFUNCTION(client, unreliable, BlueprintCallable)
-		void writeToLogClient();
-
 	//properites
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-		float _cooldown;
+	float _cooldown;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-		float _currentCooldown;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-		bool _isPrepared;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-		bool _isPreparing;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere) // Only client size thing
-		FVector _clickLocation;
-
-
+	float _currentCooldown;
 
 
 

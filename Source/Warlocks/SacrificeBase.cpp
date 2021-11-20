@@ -15,21 +15,37 @@ USacrificeBase::USacrificeBase()
 
 }
 
-void USacrificeBase::onAFTERCASTServer_Implementation()
+void USacrificeBase::callClientStopMovement_Implementation()
 {
+	stopMovement();
+}
+
+
+
+void USacrificeBase::stopMovement_Implementation()
+{
+
+}
+
+int USacrificeBase::getRequiredInputType()
+{
+	return 0;
+}
+
+void USacrificeBase::ServerSkillCast_Implementation(FVector location)
+{
+	if (_currentCooldown > 0.0f) return;
 	_currentCooldown = _cooldown;
 	ACharacter* casted = Cast<ACharacter>(GetOwner());
-	FVector location = casted->GetActorLocation();
+	location = casted->GetActorLocation();
 	AController* controller = casted->GetController();
 
-	_isPreparing = false;
+	callClientStopMovement();
 
 	FTimerHandle handle;
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
 		TArray<AActor*> ingnoredActors;
 		ingnoredActors.Add(GetOwner());
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors);
-		AFTERCASTClient();
 		}, 1.0f, false);
-
 }

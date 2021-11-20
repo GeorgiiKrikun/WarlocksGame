@@ -4,11 +4,7 @@
 #include "CWarlockChar.h"
 #include "CMineActorServer.h"
 #include "Chaos/Map.h"
-
-void UCMine::onBEGINCASTServer_Implementation(FVector location, FVector direction)
-{
-	SpawnMine(location, direction);
-}
+#include "GoglikeLogging.h"
 
 UCMine::UCMine() : UCSkillBase(),
 	_currentActorSpawnedNumber(0),
@@ -17,12 +13,13 @@ UCMine::UCMine() : UCSkillBase(),
 
 }
 
-void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
+
+void UCMine::SpawnMine_Implementation(FVector location)
 {
 	auto warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	FVector warlockLocation = warlock->GetActorLocation();
-	direction = (location - warlockLocation).GetSafeNormal2D();
+	FVector direction = (location - warlockLocation).GetSafeNormal2D();
 	FVector spawnLocation = warlockLocation + 100.0f * direction;
 	FRotator spawnRotation = direction.ToOrientationRotator();
 
@@ -50,7 +47,6 @@ void UCMine::SpawnMine_Implementation(FVector location, FVector direction)
 		spawnedMine->armVisibilityTimer();
 	}
 
-	BeginAFTERCAST();
 }
 
 void UCMine::DestroyAllMines_Implementation(int32 num)
@@ -59,4 +55,18 @@ void UCMine::DestroyAllMines_Implementation(int32 num)
 	if (mine && (*mine)) {
 		(*mine)->Destroy();
 	}
+}
+
+int UCMine::getRequiredInputType()
+{
+	return 1;
+}
+
+void UCMine::ServerSkillCast_Implementation(FVector location)
+{
+	if (_currentCooldown > 0.0f) return;
+	_currentCooldown = _cooldown;
+	GL("Mine cooldowns %f %f", _currentCooldown, _cooldown);
+
+	SpawnMine(location);
 }

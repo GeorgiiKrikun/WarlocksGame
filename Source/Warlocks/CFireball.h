@@ -18,10 +18,8 @@ class WARLOCKS_API UCFireball : public UCSkillBase
 	
 public:
 
-	void onBEGINCASTServer_Implementation(FVector location, FVector direction) override;
-
 	UFUNCTION(NetMulticast, Reliable)
-	void SpawnFireball(FVector location, FVector Direction);
+	void SpawnFireball(FVector location);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACFireballActorServer> _fireball;
@@ -31,5 +29,11 @@ public:
 
 	TMap<int32, ACFireballActorServer*> _spawnedFireballs;
 	int32 _currentActorSpawnedNumber;
+
+
+	void ServerSkillCast_Implementation(FVector location) override;
+
+
+	int getRequiredInputType() override;
 
 };

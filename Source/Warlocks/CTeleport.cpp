@@ -3,17 +3,27 @@
 
 #include "CTeleport.h"
 #include "CWarlockChar.h"
-
-void UCTeleport::onBEGINCASTServer_Implementation(FVector location, FVector direction)
-{
-	auto warlock = Cast<ACWarlockChar>(GetOwner());
-	
-	location += FVector(0.0f, 0.0f, _addZ);
-	warlock->TeleportTo(location, warlock->GetActorRotation(), false, true);
-	BeginAFTERCAST();
-}
+#include "GoglikeLogging.h"
 
 void UCTeleport::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+int UCTeleport::getRequiredInputType()
+{
+	return 1;
+}
+
+void UCTeleport::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
+{
+	if (_currentCooldown > 0.0f) return;
+	_currentCooldown = _cooldown;
+	GL("cooldowns %f %f", _currentCooldown, _cooldown);
+
+	
+
+	auto warlock = Cast<ACWarlockChar>(GetOwner());
+	location += FVector(0.0f, 0.0f, _addZ);
+	warlock->TeleportTo(location, warlock->GetActorRotation(), false, true);
 }
