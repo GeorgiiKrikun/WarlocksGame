@@ -17,7 +17,7 @@ class WARLOCKS_API UCTeleport : public UCSkillBase
 	
 public:
 
-	
+	UCTeleport();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _addZ = 80;
@@ -30,5 +30,25 @@ public:
 
 
 	int getRequiredInputType() override;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _delayBefore;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _delayAfter;
+
+
+	UFUNCTION(Client, Reliable)
+	void callClientBeforeCast(FVector location);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void BeforeCast(FVector location);
+
+
+	UFUNCTION(Client, Reliable)
+	void callClientAfterCast();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void AfterCast();
 
 };

@@ -5,13 +5,20 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GoglikeLogging.h"
 #include "Net/UnrealNetwork.h"
+#include "Particles/ParticleSystemComponent.h"
 // Sets default values
-ACWarlockChar::ACWarlockChar()
+ACWarlockChar::ACWarlockChar() : ACharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	_HealthPoints = 100.0f;
 	_MaxHealthPoints = 100.0f;
+
+	_teleportAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TeleportAnimation"));
+
+	//_teleportAnimation->SetAttachement(BombMesh);
+	//PulseParticles->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
+
 }
 
 void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -35,6 +42,7 @@ float ACWarlockChar::MaxHealthPoints() const
 void ACWarlockChar::BeginPlay()
 {
 	Super::BeginPlay();
+	_teleportAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
 }
 
@@ -77,6 +85,17 @@ void ACWarlockChar::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
+}
+
+void ACWarlockChar::playTeleportAnimation_Implementation(float time)
+{
+	GL("playTeleportAnimation_Implementation");
+	_teleportAnimation->SetVisibility(true);
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+		_teleportAnimation->SetVisibility(false);
+		}, time, false);
 
 }
 

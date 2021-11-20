@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "CWarlockChar.generated.h"
 
+class UParticleSystemComponent;
+
 UCLASS()
 class WARLOCKS_API ACWarlockChar : public ACharacter
 {
@@ -46,5 +48,15 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+
+	// TELEPORT STUFF
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void playTeleportAnimation(float time);
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UParticleSystemComponent* _teleportAnimation;
 
 };
