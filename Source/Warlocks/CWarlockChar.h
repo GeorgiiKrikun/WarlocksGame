@@ -59,4 +59,17 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UParticleSystemComponent* _teleportAnimation;
 
+	//SACRRIFICE
+	UFUNCTION(Server,Reliable, BlueprintCallable)
+	void startPlaySacrificeAnimation();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void playSacrificeAnimation();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UParticleSystemComponent* _sacrificeAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _sacrificeAnimationPlayTime;
+
 };
