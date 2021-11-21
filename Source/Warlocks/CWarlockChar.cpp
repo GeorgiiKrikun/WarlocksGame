@@ -15,6 +15,8 @@ ACWarlockChar::ACWarlockChar() : ACharacter()
 	_MaxHealthPoints = 100.0f;
 
 	_teleportAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TeleportAnimation"));
+	_sacrificeAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SacrificeAnimation"));
+
 
 	//_teleportAnimation->SetAttachement(BombMesh);
 	//PulseParticles->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
@@ -43,6 +45,7 @@ void ACWarlockChar::BeginPlay()
 {
 	Super::BeginPlay();
 	_teleportAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	_sacrificeAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
 }
 
@@ -97,5 +100,22 @@ void ACWarlockChar::playTeleportAnimation_Implementation(float time)
 		_teleportAnimation->SetVisibility(false);
 		}, time, false);
 
+}
+
+void ACWarlockChar::startPlaySacrificeAnimation_Implementation()
+{
+	playSacrificeAnimation();
+}
+
+void ACWarlockChar::playSacrificeAnimation_Implementation()
+{
+	if (HasAuthority()) return;
+	GL("playSacrificeAnimation_Implementation");
+	_sacrificeAnimation->SetVisibility(true);
+	_sacrificeAnimation->BeginTrails(FName(), FName(), ETrailWidthMode::ETrailWidthMode_FromCentre, 0.0f );
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+		_sacrificeAnimation->SetVisibility(false);
+		}, _sacrificeAnimationPlayTime, false);
 }
 
