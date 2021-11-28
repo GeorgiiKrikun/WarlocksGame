@@ -71,6 +71,19 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void playSacrificeAnimation();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void ClientImplementationOfSacrificeAnimation();
+
+	//Fireball
+
+	UFUNCTION(NetMulticast, Reliable)
+		void playFireballAnimation();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void ClientImplementationOfFireballAnimation();
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystemComponent* _sacrificeAnimation;
 

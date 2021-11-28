@@ -118,12 +118,33 @@ void ACWarlockChar::startPlaySacrificeAnimation_Implementation()
 void ACWarlockChar::playSacrificeAnimation_Implementation()
 {
 	if (HasAuthority()) return;
-	GL("playSacrificeAnimation_Implementation");
-	_sacrificeAnimation->SetVisibility(true);
-	_sacrificeAnimation->BeginTrails(FName(), FName(), ETrailWidthMode::ETrailWidthMode_FromCentre, 0.0f );
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-		_sacrificeAnimation->SetVisibility(false);
-		}, _sacrificeAnimationPlayTime, false);
+	ClientImplementationOfSacrificeAnimation();
+	//GL("playSacrificeAnimation_Implementation");
+	//_sacrificeAnimation->SetVisibility(true);
+	//_sacrificeAnimation->BeginTrails(FName(), FName(), ETrailWidthMode::ETrailWidthMode_FromCentre, 0.0f );
+	//FTimerHandle handle;
+	//GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+	//	_sacrificeAnimation->SetVisibility(false);
+	//	}, _sacrificeAnimationPlayTime, false);
+}
+
+void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
+{
+
+}
+
+
+
+
+
+void ACWarlockChar::playFireballAnimation_Implementation()
+{
+	if (HasAuthority()) return;
+	ClientImplementationOfFireballAnimation();
+}
+
+void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
+{
+
 }
 

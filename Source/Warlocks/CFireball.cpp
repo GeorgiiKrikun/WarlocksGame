@@ -57,5 +57,10 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	_currentCooldown = _cooldown;
 	GL("Fireball cooldowns %f %f", _currentCooldown, _cooldown);
 
+	auto warlock = Cast<ACWarlockChar>(GetOwner());
+	if (!warlock) return;
+	warlock->playFireballAnimation();
+
+
 	SpawnFireball(location);
 }
