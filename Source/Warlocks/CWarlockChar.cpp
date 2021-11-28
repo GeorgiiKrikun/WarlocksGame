@@ -135,7 +135,28 @@ void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
 
 
 
+void  ACWarlockChar::stopMovementFor_Implementation(float seconds) 
+{
+	AController* controller = GetController();
+	if (!controller) {
+		GW("Could not fild controller, movement input failed");
+	}
 
+	controller->SetIgnoreMoveInput(true);
+
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [controller]() {
+			controller->SetIgnoreMoveInput(false);
+		}, seconds, false);
+}
+
+void ACWarlockChar::orientDirectionTowards_Implementation(FVector direction, float seconds) 
+{
+	FRotator rot = direction.ToOrientationRotator();
+	this->SetActorRotation(rot, ETeleportType::None);
+	GL("Rotator = %s", *rot.ToString());
+
+}
 
 void ACWarlockChar::playFireballAnimation_Implementation()
 {

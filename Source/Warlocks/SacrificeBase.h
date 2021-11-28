@@ -23,6 +23,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void stopMovement();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _castDelay;
+
 	void ServerSkillCast_Implementation(FVector location) override;
 
 

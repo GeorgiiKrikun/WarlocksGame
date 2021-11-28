@@ -30,6 +30,8 @@ public:
 	TMap<int32, ACFireballActorServer*> _spawnedFireballs;
 	int32 _currentActorSpawnedNumber;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _castDelay;
 
 	void ServerSkillCast_Implementation(FVector location) override;
 

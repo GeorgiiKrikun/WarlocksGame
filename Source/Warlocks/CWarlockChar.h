@@ -54,7 +54,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(Client, Reliable)
+	void stopMovementFor(float seconds);
 
+	UFUNCTION(Server, Reliable)
+	void orientDirectionTowards(FVector direction, float seconds);
 
 	// TELEPORT STUFF
 
@@ -73,6 +77,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void ClientImplementationOfSacrificeAnimation();
+
+
 
 	//Fireball
 

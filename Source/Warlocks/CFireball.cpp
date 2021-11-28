@@ -11,6 +11,7 @@ void UCFireball::SpawnFireball_Implementation(FVector location)
 	auto warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	FVector warlockLocation = warlock->GetActorLocation();
+
 	FVector direction = (location - warlockLocation).GetSafeNormal2D();
 	FVector spawnLocation = warlockLocation + 100.0f * direction;
 	FRotator spawnRotation = direction.ToOrientationRotator();
@@ -61,6 +62,11 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	if (!warlock) return;
 	warlock->playFireballAnimation();
 
+	warlock->stopMovementFor(_castDelay);
+	warlock->orientDirectionTowards(location - warlock->GetActorLocation(), 1.0f);
 
-	SpawnFireball(location);
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this, location]() {
+		SpawnFireball(location);
+	}, _castDelay, false);
 }

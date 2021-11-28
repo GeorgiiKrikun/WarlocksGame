@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h" 
 
 // Sets default values for this component's properties
-USacrificeBase::USacrificeBase()
+USacrificeBase::USacrificeBase() : _castDelay(1.0f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -47,5 +47,5 @@ void USacrificeBase::ServerSkillCast_Implementation(FVector location)
 		TArray<AActor*> ingnoredActors;
 		ingnoredActors.Add(GetOwner());
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors);
-		}, 1.0f, false);
+		}, _castDelay, false);
 }
