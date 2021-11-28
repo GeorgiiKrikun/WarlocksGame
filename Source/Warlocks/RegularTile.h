@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "RegularTile.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class WARLOCKS_API ARegularTile : public AActor
 {
@@ -19,10 +21,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UStaticMeshComponent* _TileMesh;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UBoxComponent* _collisionBox;
+
 };

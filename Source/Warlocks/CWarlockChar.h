@@ -23,6 +23,8 @@ public:
 	float HealthPoints() const;
 	float MaxHealthPoints() const;
 
+	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -41,6 +43,9 @@ protected:
 
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	
+
 
 public:
 	// Called every frame

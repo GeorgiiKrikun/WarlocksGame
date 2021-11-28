@@ -38,6 +38,7 @@ public:
 
 	void SetSkillThatSpawnedThisActor(UCFireball* mine);
 	void SetCorrespondingNumberOfThisActor(int32 num);
+
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UProjectileMovementComponent* _movement;

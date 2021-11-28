@@ -73,6 +73,14 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 {
 	Super::InternalTakePointDamage(Damage, PointDamageEvent, EventInstigator, DamageCauser);
 	_HealthPoints = _HealthPoints - Damage;
+	GL("TOOK POINT DAMAGE");
+	return Damage;
+}
+
+float ACWarlockChar::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	_HealthPoints = _HealthPoints - Damage;
+	GL("TOOK DAMAGE");
 	return Damage;
 }
 
