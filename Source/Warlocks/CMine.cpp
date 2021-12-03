@@ -68,5 +68,19 @@ void UCMine::ServerSkillCast_Implementation(FVector location)
 	_currentCooldown = _cooldown;
 	GL("Mine cooldowns %f %f", _currentCooldown, _cooldown);
 
-	SpawnMine(location);
+
+	auto warlock = Cast<ACWarlockChar>(GetOwner());
+	if (!warlock) return;
+	FVector warlockLocation = warlock->GetActorLocation();
+	FVector direction = (location - warlockLocation).GetSafeNormal2D();
+	FVector spawnLocation = warlockLocation + 100.0f * direction;
+	FRotator spawnRotation = direction.ToOrientationRotator();
+
+	ACMineActorServer* spawnedMine = Cast<ACMineActorServer>(GetWorld()->SpawnActor(_mine, &spawnLocation, &spawnRotation));
+	_spawnedMines.Add(_currentActorSpawnedNumber, spawnedMine);
+	spawnedMine->SetSkillThatSpawnedThisActor(this);
+	spawnedMine->SetCorrespondingNumberOfThisActor(_currentActorSpawnedNumber);
+	_currentActorSpawnedNumber++;
+
+	//SpawnMine(location);
 }

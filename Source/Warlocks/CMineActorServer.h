@@ -45,10 +45,23 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	USphereComponent* _collisionSphere;
+	USphereComponent* _collisionSphere = nullptr;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _suckTime = 5.0f;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _suckFallOff = 200.0f;
+	
+	float _currentSuckTime = -1.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _force = 200.0f;
+
+	TArray<AActor*> _actorsCaught;
 
 	UCMine* _skillThatSpawnedThatActor;
 	int32 _correspondingNumberOfThisActor;
