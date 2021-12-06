@@ -37,14 +37,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _MaxHealthPoints;
 
-
-
 	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	
+	UFUNCTION(NetMulticast, Reliable)
+	void death();
+
 
 
 public:

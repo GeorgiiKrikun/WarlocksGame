@@ -2,4 +2,14 @@
 
 
 #include "CWarlockMainPlayerController.h"
+#include "GoglikeLogging.h"
 
+void ACWarlockMainPlayerController::callOnPossess_Implementation()
+{
+	OnPossessClient();
+}
+
+void ACWarlockMainPlayerController::OnPossessClient_Implementation()
+{
+	
+}

@@ -14,5 +14,12 @@ class WARLOCKS_API ACWarlockMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(Client, Reliable)
+	void callOnPossess();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnPossessClient();
+
 	
 };

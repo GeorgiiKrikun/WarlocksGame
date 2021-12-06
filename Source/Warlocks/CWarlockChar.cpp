@@ -5,6 +5,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GoglikeLogging.h"
 #include "Net/UnrealNetwork.h"
+#include "CWarlocksGameMode.h"
+#include "GameFramework/GameModeBase.h" 
+#include "CPlayerState.h"
 #include "Particles/ParticleSystemComponent.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
@@ -62,6 +65,10 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		FVector finalImpulse = -directionNormalized * 100000.0f;
 		GetCharacterMovement()->AddImpulse(finalImpulse, false);
 		return Damage;
+		if (_HealthPoints < 0.0f) {
+			death();
+		}
+
 	}
 	else {
 		return 0;
@@ -74,13 +81,22 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 	Super::InternalTakePointDamage(Damage, PointDamageEvent, EventInstigator, DamageCauser);
 	_HealthPoints = _HealthPoints - Damage;
 	GL("TOOK POINT DAMAGE");
+
+	if (_HealthPoints < 0.0f) {
+		death();
+	}
+
 	return Damage;
 }
 
 float ACWarlockChar::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	_HealthPoints = _HealthPoints - Damage;
-	GL("TOOK DAMAGE");
+	
+	if (_HealthPoints < 0.0f) {
+		death();
+	}
+
 	return Damage;
 }
 
@@ -166,6 +182,21 @@ void ACWarlockChar::playFireballAnimation_Implementation()
 
 void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 {
+
+}
+
+void ACWarlockChar::death_Implementation() {
+	AController* controller = GetController();
+	if (controller) controller->SetPawn(nullptr);
+	this->Destroy();
+
+	if (!HasAuthority()) return;
+
+	//AMyGameMode* mymode = Cast<AMyGameMode>(GetWorld()->GetAuthGameMode());
+	ACPlayerState* playerState = controller->GetPlayerState<ACPlayerState>();
+	if (playerState) playerState->setDead(true);
+
+	
 
 }
 
