@@ -10,7 +10,22 @@
 
 void ACWarlocksGameMode::StartPlay() {
 	Super::StartPlay();
+}
 
+void ACWarlocksGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (_currentLengthOfInterlude >= 0.0f && ((_currentLengthOfInterlude - DeltaSeconds) <= 0.0f)) {
+		GW("Exiting Interlude");
+		ReactOnExitInterlude();
+	}
+
+	_currentLengthOfInterlude -= DeltaSeconds;
+}
+
+void ACWarlocksGameMode::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
@@ -26,38 +41,89 @@ void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
 
 void ACWarlocksGameMode::ReactOnDeath()
 {
+
+	if (_currentLengthOfInterlude <= 0.0f) { // we are in the battle
+		ReactOnDeathBattle();
+	}
+	else { // interlude, immediate respawn
+		ReactOnDeathInterlude();
+	}
+
+}
+
+void ACWarlocksGameMode::ReactOnDeathBattle()
+{
 	if (_bRespawnGuard) return;
-	UWorld* World = GetWorld();
+    int numberPlayersLeftAlive = CheckNumberOfPlayersAlive();
+    
+    GL("Number of players still alive = %d", numberPlayersLeftAlive);
+    
+	// respawn everyone
+    if (numberPlayersLeftAlive > 1) return;
+    _bRespawnGuard = true;
+    GW("This game has ended");
+    for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+    {
+    	ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+    	RespawnPlayer(PlayerController);
+    }
+    _bRespawnGuard = false;
+
+	// begin interlude
+	_currentLengthOfInterlude = _lengthOfInterlude;
+}
+
+void ACWarlocksGameMode::ReactOnDeathInterlude()
+{
+	if (_bRespawnGuard) return;
+	_bRespawnGuard = true;
+
+	GL("Reacting on death in interlude")
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		RespawnPlayer(PlayerController, false);
+	}
+	_bRespawnGuard = false;
+}
+
+
+void ACWarlocksGameMode::ReactOnExitInterlude()
+{
+	if (_bRespawnGuard) return;
+	_bRespawnGuard = true;
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		RespawnPlayer(PlayerController, true);
+	}
+	_bRespawnGuard = false;
+}
+
+int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
+{
 	int numberPlayersLeftAlive = 0;
+	UWorld* World = GetWorld();
 	for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
 		if (PlayerController) {
 			ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
 			if (pawn) numberPlayersLeftAlive++;
-
-			//ACPlayerState* state = PlayerController->GetPlayerState<ACPlayerState>();
-			//state->setDead(false);
-
-			//RestartPlayer(PlayerController);
-			//PlayerController->callOnPawnRestartClient();
-			//_nPlayers++;
 		}
 	}
+	return numberPlayersLeftAlive;
+}
 
-	GL("Number of players still alive = %d", numberPlayersLeftAlive);
-
-	if (numberPlayersLeftAlive > 1) return;
-	_bRespawnGuard = true;
-	GW("This game has ended");
-	for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
-	{
-		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
-		if (pawn) pawn->Destroy();
-		if (PlayerController) {
-			RestartPlayer(PlayerController);
-		}
+void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive /*= true*/)
+{
+	if (!controller) return;
+	ACWarlockChar* pawn = controller->GetPawn<ACWarlockChar>();
+	if (pawn && respawnEvenIfAlive) {
+		pawn->Destroy();
+		RestartPlayer(controller);
+	} else if (!pawn) {
+		RestartPlayer(controller);
 	}
-	_bRespawnGuard = false;
+
 }
