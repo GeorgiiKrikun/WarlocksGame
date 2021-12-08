@@ -10,6 +10,7 @@ void ACPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 }
 
 void ACPlayerState::setDead(bool dead) {
+	GL("OLD DEAD IS %d, new Dead IS %d", _isDead, dead)
 	if (dead && !_isDead) {
 		GW("BROADCAST ON %d", GetNetMode());
 		Del.Broadcast(GetPlayerId());

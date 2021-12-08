@@ -3,13 +3,43 @@
 
 #include "CWarlockMainPlayerController.h"
 #include "GoglikeLogging.h"
+#include "CWarlockChar.h"
 
-void ACWarlockMainPlayerController::callOnPossess_Implementation()
+void ACWarlockMainPlayerController::callOnPawnRestartClient_Implementation()
 {
-	OnPossessClient();
+	GL("callOnPawnRestartClient_Implementation");
+	OnPawnRestartClient();
 }
 
-void ACWarlockMainPlayerController::OnPossessClient_Implementation()
+void ACWarlockMainPlayerController::OnPawnRestartClient_Implementation()
 {
 	
+}
+
+void ACWarlockMainPlayerController::OnPossess(APawn* aPawn)
+{
+	Super::OnPossess(aPawn);
+	ACWarlockChar* character = Cast<ACWarlockChar>(aPawn);
+	if (!character) return;
+
+	character->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnPawnDeath);
+}
+
+void ACWarlockMainPlayerController::OnUnPossess()
+{
+	Super::OnUnPossess();
+	if (HasAuthority()) {
+		GL("OnUnPossess");
+		OnPawnDeath.Broadcast();
+	}
+}
+
+void ACWarlockMainPlayerController::reactOnPawnDeath()
+{
+	GL("REACT ON PAWN DEATH");
+	APawn* pawn = this->GetPawn();
+	if (!pawn) return;
+
+	UnPossess();
+	pawn->Destroy();
 }

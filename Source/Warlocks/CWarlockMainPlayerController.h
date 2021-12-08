@@ -13,13 +13,24 @@ UCLASS()
 class WARLOCKS_API ACWarlockMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPawnDeath);
 
 public:
 	UFUNCTION(Client, Reliable)
-	void callOnPossess();
+	void callOnPawnRestartClient();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnPossessClient();
+	void OnPawnRestartClient();
 
-	
+	FOnPawnDeath OnPawnDeath;
+
+protected:
+	void OnPossess(APawn* aPawn) override;
+
+	void OnUnPossess() override;
+
+private:
+	UFUNCTION()
+	void reactOnPawnDeath();
+
 };

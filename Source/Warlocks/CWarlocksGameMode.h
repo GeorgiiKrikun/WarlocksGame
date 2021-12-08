@@ -18,13 +18,23 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameModeBase
 	void PostLogin(APlayerController* NewPlayer) override;
 	
 	UFUNCTION()
-	void ReactOnDeath(int ID);
+	void ReactOnDeath();
 
 
 public:
 	void StartPlay() override;
 
-	uint32 _nPlayers = 0;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	float _lengthOfInterlude;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	float _currentLengthOfInterlude;
+
+
+private:
+	bool _bRespawnGuard = false;
+
+
 
 	
 };

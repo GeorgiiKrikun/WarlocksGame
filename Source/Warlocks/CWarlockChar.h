@@ -13,6 +13,10 @@ class WARLOCKS_API ACWarlockChar : public ACharacter
 {
 	GENERATED_BODY()
 
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRestart);
+
 public:
 	// Sets default values for this character's properties
 	ACWarlockChar();
@@ -24,6 +28,12 @@ public:
 	float MaxHealthPoints() const;
 
 	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+
+	FOnDeath onDeathDelegate;
+	FOnRestart onRestartDelegate;
+
+	void Restart() override;
 
 protected:
 	// Called when the game starts
@@ -42,8 +52,11 @@ protected:
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	UFUNCTION(NetMulticast, Reliable)
+	UFUNCTION(Server, Reliable)
 	void death();
+
+
+
 
 
 
@@ -77,7 +90,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void ClientImplementationOfSacrificeAnimation();
-
 
 
 	//Fireball

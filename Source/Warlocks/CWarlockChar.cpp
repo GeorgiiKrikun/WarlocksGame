@@ -9,6 +9,8 @@
 #include "GameFramework/GameModeBase.h" 
 #include "CPlayerState.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "GameFramework/Pawn.h"
+#include "CWarlockMainPlayerController.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -66,7 +68,7 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		GetCharacterMovement()->AddImpulse(finalImpulse, false);
 		return Damage;
 		if (_HealthPoints < 0.0f) {
-			death();
+			onDeathDelegate.Broadcast();
 		}
 
 	}
@@ -83,7 +85,7 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 	GL("TOOK POINT DAMAGE");
 
 	if (_HealthPoints < 0.0f) {
-		death();
+		onDeathDelegate.Broadcast();
 	}
 
 	return Damage;
@@ -94,10 +96,19 @@ float ACWarlockChar::TakeDamage(float Damage, struct FDamageEvent const& DamageE
 	_HealthPoints = _HealthPoints - Damage;
 	
 	if (_HealthPoints < 0.0f) {
-		death();
+		onDeathDelegate.Broadcast();
 	}
 
 	return Damage;
+}
+
+void ACWarlockChar::Restart()
+{
+	Super::Restart();
+	if (!HasAuthority()) { // setup the player controller HUD again
+		ACWarlockMainPlayerController* controller = GetController<ACWarlockMainPlayerController>();
+		controller->callOnPawnRestartClient();
+	}
 }
 
 // Called every frame
@@ -135,13 +146,6 @@ void ACWarlockChar::playSacrificeAnimation_Implementation()
 {
 	if (HasAuthority()) return;
 	ClientImplementationOfSacrificeAnimation();
-	//GL("playSacrificeAnimation_Implementation");
-	//_sacrificeAnimation->SetVisibility(true);
-	//_sacrificeAnimation->BeginTrails(FName(), FName(), ETrailWidthMode::ETrailWidthMode_FromCentre, 0.0f );
-	//FTimerHandle handle;
-	//GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-	//	_sacrificeAnimation->SetVisibility(false);
-	//	}, _sacrificeAnimationPlayTime, false);
 }
 
 void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
@@ -186,17 +190,7 @@ void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 }
 
 void ACWarlockChar::death_Implementation() {
-	AController* controller = GetController();
-	if (controller) controller->SetPawn(nullptr);
-	this->Destroy();
 
-	if (!HasAuthority()) return;
-
-	//AMyGameMode* mymode = Cast<AMyGameMode>(GetWorld()->GetAuthGameMode());
-	ACPlayerState* playerState = controller->GetPlayerState<ACPlayerState>();
-	if (playerState) playerState->setDead(true);
-
-	
 
 }
 

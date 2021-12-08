@@ -15,40 +15,49 @@ void ACWarlocksGameMode::StartPlay() {
 
 void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
 	Super::PostLogin(NewPlayer);
+	ACWarlockMainPlayerController* myController = Cast<ACWarlockMainPlayerController>(NewPlayer);
+	if (!myController) {
+		GE("Login failed, controller is empty");
+	}
 
-	_nPlayers++;
-	ACPlayerState* state = NewPlayer->GetPlayerState<ACPlayerState>();
-	if (state) GL("GOT NEW PLAYER AND HIS STATE %d ", GetNetMode());
-	state->Del.AddDynamic(this, &ACWarlocksGameMode::ReactOnDeath);
+	myController->OnPawnDeath.AddDynamic(this, &ACWarlocksGameMode::ReactOnDeath);
 
 }
 
-void ACWarlocksGameMode::ReactOnDeath(int ID) {
-	GL("Heh %d", ID);
-	_nPlayers--;
+void ACWarlocksGameMode::ReactOnDeath()
+{
+	if (_bRespawnGuard) return;
+	UWorld* World = GetWorld();
+	int numberPlayersLeftAlive = 0;
+	for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		if (PlayerController) {
+			ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
+			if (pawn) numberPlayersLeftAlive++;
 
-	if (_nPlayers <= 1) {
-		GW("This game has ended, moving to the next map");
-		UWorld* World = GetWorld();
-		for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
-		{
-			ACWarlockMainPlayerController* PlayerController = Cast< ACWarlockMainPlayerController>(Iterator->Get());
-			if (PlayerController) {
-				ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
-				if (pawn) {
-					PlayerController->SetPawn(nullptr);
-					pawn->Destroy();
-				}
-				ACPlayerState* state = PlayerController->GetPlayerState<ACPlayerState>();
-				state->setDead(false);
+			//ACPlayerState* state = PlayerController->GetPlayerState<ACPlayerState>();
+			//state->setDead(false);
 
-				RestartPlayer(PlayerController);
-				PlayerController->callOnPossess();
-				_nPlayers++;
-			}
+			//RestartPlayer(PlayerController);
+			//PlayerController->callOnPawnRestartClient();
+			//_nPlayers++;
 		}
 	}
 
+	GL("Number of players still alive = %d", numberPlayersLeftAlive);
 
-
+	if (numberPlayersLeftAlive > 1) return;
+	_bRespawnGuard = true;
+	GW("This game has ended");
+	for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
+		if (pawn) pawn->Destroy();
+		if (PlayerController) {
+			RestartPlayer(PlayerController);
+		}
+	}
+	_bRespawnGuard = false;
 }
