@@ -95,10 +95,10 @@ public:
 	//Fireball
 
 	UFUNCTION(NetMulticast, Reliable)
-		void playFireballAnimation();
+	void playFireballAnimation();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void ClientImplementationOfFireballAnimation();
+	void ClientImplementationOfFireballAnimation();
 
 
 

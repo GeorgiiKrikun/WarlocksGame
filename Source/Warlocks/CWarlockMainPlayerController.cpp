@@ -16,6 +16,16 @@ void ACWarlockMainPlayerController::OnPawnRestartClient_Implementation()
 	
 }
 
+void ACWarlockMainPlayerController::callOnInterludeBegin_Implementation()
+{
+	onInterludeBegin();
+}
+
+void ACWarlockMainPlayerController::onInterludeBegin_Implementation()
+{
+
+}
+
 void ACWarlockMainPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);

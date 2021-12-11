@@ -35,9 +35,9 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 public:
 	void StartPlay() override;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _lengthOfInterlude = 20.0f;
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _currentLengthOfInterlude = -1.0f;
 
 

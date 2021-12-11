@@ -71,6 +71,12 @@ void ACWarlocksGameMode::ReactOnDeathBattle()
 
 	// begin interlude
 	_currentLengthOfInterlude = _lengthOfInterlude;
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		PlayerController->callOnInterludeBegin();
+	}
+
 }
 
 void ACWarlocksGameMode::ReactOnDeathInterlude()

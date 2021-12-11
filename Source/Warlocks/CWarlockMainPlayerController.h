@@ -18,11 +18,17 @@ class WARLOCKS_API ACWarlockMainPlayerController : public APlayerController
 public:
 	UFUNCTION(Client, Reliable)
 	void callOnPawnRestartClient();
-
 	UFUNCTION(BlueprintNativeEvent)
 	void OnPawnRestartClient();
 
 	FOnPawnDeath OnPawnDeath;
+
+	UFUNCTION(Client, Reliable)
+	void callOnInterludeBegin();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void onInterludeBegin();
+
 
 protected:
 	void OnPossess(APawn* aPawn) override;
