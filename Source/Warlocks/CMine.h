@@ -21,20 +21,11 @@ public:
 	UCMine();
 
 
-	UFUNCTION(NetMulticast,Reliable)
-	void SpawnMine(FVector location);
-
-	UFUNCTION(NetMulticast, Reliable)
-	void DestroyAllMines(int32 num);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACMineActorServer> _mine;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool _visibleOnThisInstance;
-
-	TMap<int32, ACMineActorServer*> _spawnedMines;
-	int32 _currentActorSpawnedNumber;
 
 
 	void ServerSkillCast_Implementation(FVector location) override;

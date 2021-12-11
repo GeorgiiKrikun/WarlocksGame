@@ -18,17 +18,8 @@ class WARLOCKS_API UCFireball : public UCSkillBase
 	
 public:
 
-	UFUNCTION(NetMulticast, Reliable)
-	void SpawnFireball(FVector location);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACFireballActorServer> _fireball;
-
-	UFUNCTION(NetMulticast, Reliable)
-	void DestroyAllMines(int32 num);
-
-	TMap<int32, ACFireballActorServer*> _spawnedFireballs;
-	int32 _currentActorSpawnedNumber;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _castDelay;
