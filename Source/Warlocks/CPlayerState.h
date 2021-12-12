@@ -26,9 +26,18 @@ public:
 
 	FOnPlayerStateChangeDeath Del;
 
+	UFUNCTION(BlueprintCallable)
+	int Coins() const;
+
+	void SetCoins(int val);
+
 protected:
 	//properites
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	bool _isDead = false;
 	
+	UPROPERTY(Replicated)
+	int _coins = 0;
+
+
 };

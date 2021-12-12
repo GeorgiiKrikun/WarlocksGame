@@ -84,10 +84,13 @@ void ACWarlocksGameMode::ReactOnDeathBattle()
 
 	// begin interlude
 	_currentLengthOfInterlude = _lengthOfInterlude;
+	AwardCoinsAccordingToStats();
+	FString damageStats = _damageStatistics.pop();
+
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		PlayerController->callOnInterludeBegin(_damageStatistics.pop());
+		PlayerController->callOnInterludeBegin(damageStats);
 	}
 
 }
@@ -117,6 +120,16 @@ void ACWarlocksGameMode::ReactOnExitInterlude()
 		RespawnPlayer(PlayerController, true);
 	}
 	_bRespawnGuard = false;
+}
+
+void ACWarlocksGameMode::AwardCoinsAccordingToStats()
+{
+	for (const TPair<APlayerController*, float>& pair : _damageStatistics._damageDoneMap)
+	{
+		ACPlayerState* playerState = pair.Key->GetPlayerState<ACPlayerState>();
+		if (!playerState) continue;
+		playerState->SetCoins(playerState->Coins() + int(pair.Value / _DamageForCoin));
+	}
 }
 
 int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
@@ -154,10 +167,13 @@ FString FDamageStatistics::pop()
 	{
 		res += "ID: ";
 		res.AppendInt(pair.Key->PlayerState->GetPlayerId());
-		res += " NAME: ";
-		res += pair.Key->PlayerState->GetPlayerName();
+
+		//res += " NAME: ";
+		//res += pair.Key->PlayerState->GetPlayerName();
 		res += " DAMAGE DONE: ";
 		res.AppendInt(int( pair.Value));
+		res += " Coins: ";
+		res.AppendInt(pair.Key->GetPlayerState<ACPlayerState>()->Coins());
 		res += "\n";
 	}
 

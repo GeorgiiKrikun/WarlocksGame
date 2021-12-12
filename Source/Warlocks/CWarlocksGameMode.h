@@ -38,6 +38,8 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 
 	void ReactOnExitInterlude();
 
+	void AwardCoinsAccordingToStats();
+
 	int CheckNumberOfPlayersAlive();
 
 	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true);
@@ -50,6 +52,9 @@ public:
 	float _lengthOfInterlude = 20.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _currentLengthOfInterlude = -1.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _DamageForCoin = 30.0f;
+
 
 	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);
 

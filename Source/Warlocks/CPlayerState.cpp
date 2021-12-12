@@ -3,10 +3,12 @@
 
 #include "CPlayerState.h"
 #include "GoglikeLogging.h"
+
 void ACPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACPlayerState, _isDead);
+	DOREPLIFETIME(ACPlayerState, _coins);
 }
 
 void ACPlayerState::setDead(bool dead) {
@@ -17,4 +19,14 @@ void ACPlayerState::setDead(bool dead) {
 	}
 	_isDead = dead;
 
+}
+
+int ACPlayerState::Coins() const
+{
+	return _coins;
+}
+
+void ACPlayerState::SetCoins(int val)
+{
+	_coins = val;
 }
