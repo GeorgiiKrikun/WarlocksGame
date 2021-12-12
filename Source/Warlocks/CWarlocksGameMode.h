@@ -11,11 +11,21 @@ class ACWarlockMainPlayerController;
 /**
  * 
  */
+
+USTRUCT() struct FDamageStatistics {
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TMap<APlayerController*, float> _damageDoneMap;
+
+	FString pop();
+
+};
+
 UCLASS()
 class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 {
 	GENERATED_BODY()
-	
 
 	void PostLogin(APlayerController* NewPlayer) override;
 	
@@ -32,6 +42,7 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 
 	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true);
 
+
 public:
 	void StartPlay() override;
 
@@ -40,12 +51,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _currentLengthOfInterlude = -1.0f;
 
-
+	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);
 
 	void Tick(float DeltaSeconds) override;
 
 private:
 	bool _bRespawnGuard = false;
+
+
+	UPROPERTY()
+	FDamageStatistics _damageStatistics;
 
 	
 

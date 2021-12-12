@@ -24,10 +24,10 @@ public:
 	FOnPawnDeath OnPawnDeath;
 
 	UFUNCTION(Client, Reliable)
-	void callOnInterludeBegin();
+	void callOnInterludeBegin(const FString& text);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void onInterludeBegin();
+	void onInterludeBegin(const FString& text);
 
 
 protected:

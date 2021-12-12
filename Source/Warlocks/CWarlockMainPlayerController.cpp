@@ -16,12 +16,12 @@ void ACWarlockMainPlayerController::OnPawnRestartClient_Implementation()
 	
 }
 
-void ACWarlockMainPlayerController::callOnInterludeBegin_Implementation()
+void ACWarlockMainPlayerController::callOnInterludeBegin_Implementation(const FString& text)
 {
-	onInterludeBegin();
+	onInterludeBegin(text);
 }
 
-void ACWarlockMainPlayerController::onInterludeBegin_Implementation()
+void ACWarlockMainPlayerController::onInterludeBegin_Implementation(const FString& text)
 {
 
 }

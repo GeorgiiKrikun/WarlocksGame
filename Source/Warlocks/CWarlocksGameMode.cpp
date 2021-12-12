@@ -12,6 +12,15 @@ void ACWarlocksGameMode::StartPlay() {
 	Super::StartPlay();
 }
 
+void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage)
+{
+	if (!_damageStatistics._damageDoneMap.Contains(from)) {
+		GE("Cannot add damage statistic entry, because controller was not registered in game mode");
+		return;     
+	}               
+	_damageStatistics._damageDoneMap[from] += damage;
+}
+
 void ACWarlocksGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -23,6 +32,7 @@ void ACWarlocksGameMode::Tick(float DeltaSeconds)
 	_currentLengthOfInterlude -= DeltaSeconds;
 }
 
+
 void ACWarlocksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,10 +43,13 @@ void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
 	ACWarlockMainPlayerController* myController = Cast<ACWarlockMainPlayerController>(NewPlayer);
 	if (!myController) {
 		GE("Login failed, controller is empty");
+		return;
 	}
 
 	myController->OnPawnDeath.AddDynamic(this, &ACWarlocksGameMode::ReactOnDeath);
-
+	if (!_damageStatistics._damageDoneMap.Contains(myController)) {
+		_damageStatistics._damageDoneMap.Add(myController, 0.0f);
+	}
 }
 
 void ACWarlocksGameMode::ReactOnDeath()
@@ -74,7 +87,7 @@ void ACWarlocksGameMode::ReactOnDeathBattle()
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		PlayerController->callOnInterludeBegin();
+		PlayerController->callOnInterludeBegin(_damageStatistics.pop());
 	}
 
 }
@@ -131,5 +144,25 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 	} else if (!pawn) {
 		RestartPlayer(controller);
 	}
+
+}
+
+FString FDamageStatistics::pop()
+{
+	FString res = "Statistics:\n\n";
+	for (const TPair<APlayerController*, float>& pair : _damageDoneMap)
+	{
+		res += "ID: ";
+		res.AppendInt(pair.Key->PlayerState->GetPlayerId());
+		res += " NAME: ";
+		res += pair.Key->PlayerState->GetPlayerName();
+		res += " DAMAGE DONE: ";
+		res.AppendInt(int( pair.Value));
+		res += "\n";
+	}
+
+	_damageDoneMap.Empty();
+
+	return res;
 
 }

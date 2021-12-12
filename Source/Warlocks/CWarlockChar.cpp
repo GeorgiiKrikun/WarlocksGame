@@ -11,6 +11,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "GameFramework/Pawn.h"
 #include "CWarlockMainPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -56,9 +57,9 @@ void ACWarlockChar::BeginPlay()
 
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
+
+
 	if (HasAuthority()) {
-		Damage = Super::InternalTakeRadialDamage(Damage, RadialDamageEvent, EventInstigator, DamageCauser);
-		GL("DAMAGE TAKEN %f", Damage);
 		_HealthPoints = _HealthPoints - Damage;
 		FVector origin = RadialDamageEvent.Origin;
 		FVector actorLocation = GetActorLocation();
@@ -66,10 +67,19 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		directionNormalized.Normalize();
 		FVector finalImpulse = -directionNormalized * 100000.0f;
 		GetCharacterMovement()->AddImpulse(finalImpulse, false);
-		return Damage;
-		if (_HealthPoints < 0.0f) {
+
+		ACWarlockMainPlayerController* wc = Cast<ACWarlockMainPlayerController>(EventInstigator);
+		if (wc) {
+			ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+			gameMode->addDamageStatisticsEntry(wc, Damage);
+		}
+
+		if (_HealthPoints <= 0.0f) {
 			onDeathDelegate.Broadcast();
 		}
+
+		return Damage;
+
 
 	}
 	else {
@@ -92,14 +102,8 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 }
 
 float ACWarlockChar::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
-	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	_HealthPoints = _HealthPoints - Damage;
-	
-	if (_HealthPoints < 0.0f) {
-		onDeathDelegate.Broadcast();
-	}
-
-	return Damage;
+	//Damage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	return Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 }
 
 void ACWarlockChar::Restart()

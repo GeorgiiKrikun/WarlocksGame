@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "CFireball.h"
+#include "CWarlockMainPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -13,6 +14,12 @@ ACFireballActorServer::ACFireballActorServer() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	SetReplicates(true);
+	bAlwaysRelevant = true;
+	bOnlyRelevantToOwner = false;
+	SetReplicatingMovement(true);
+
 	if (!_collisionSphere) {
 		_collisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphereomponent"));
 		this->SetRootComponent(_collisionSphere);
@@ -28,7 +35,11 @@ ACFireballActorServer::ACFireballActorServer() : Super()
 		_movement->SetUpdatedComponent(this->GetRootComponent());
 		_movement->MaxSpeed = 3000.0f;
 		_movement->ProjectileGravityScale = 0.0f;
+		_movement->SetIsReplicated(true);
 	}	
+
+
+
 }
 
 // Called when the game starts or when spawned
@@ -51,13 +62,13 @@ void ACFireballActorServer::Tick(float DeltaTime)
 
 void ACFireballActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//this->Destroy();
 	if (HasAuthority() && _skillThatSpawnedThatActor) {
 		TArray<AActor*> ingnoredActors;
-		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors);
-		_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
-	}
 
+		AController* instigator = _skillThatSpawnedThatActor->getControllerThatPossessThisSkill();
+		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors, this, instigator);
+		Destroy();
+	}
 }
 
 void ACFireballActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -71,8 +82,4 @@ void ACFireballActorServer::SetSkillThatSpawnedThisActor(UCFireball* mine)
 	_skillThatSpawnedThatActor = mine;
 }
 
-void ACFireballActorServer::SetCorrespondingNumberOfThisActor(int32 num)
-{
-	_correspondingNumberOfThisActor = num;
-}
 

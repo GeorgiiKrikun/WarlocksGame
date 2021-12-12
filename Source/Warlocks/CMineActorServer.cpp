@@ -10,7 +10,7 @@
 #include "Components/SphereComponent.h"
 
 // Sets default values
-ACMineActorServer::ACMineActorServer()
+ACMineActorServer::ACMineActorServer() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -69,8 +69,9 @@ void ACMineActorServer::Tick(float DeltaTime)
 		}	
 
 		if (_currentSuckTime <= 0.0f) {
-			if (!_skillThatSpawnedThatActor) return;
-			_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
+			//if (!_skillThatSpawnedThatActor) return;
+			Destroy();
+			//_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
 		}
 	}
 
@@ -94,8 +95,8 @@ void ACMineActorServer::SetSkillThatSpawnedThisActor(UCMine* mine)
 	_skillThatSpawnedThatActor = mine;
 }
 
-void ACMineActorServer::SetCorrespondingNumberOfThisActor(int32 num)
-{
-	_correspondingNumberOfThisActor = num;
-}
+//void ACMineActorServer::SetCorrespondingNumberOfThisActor(int32 num)
+//{
+//	_correspondingNumberOfThisActor = num;
+//}
 

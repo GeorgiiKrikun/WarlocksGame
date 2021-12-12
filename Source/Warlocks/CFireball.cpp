@@ -32,5 +32,5 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 		ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation));
 		spawnedFireball->ProjectileMovement()->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
 		spawnedFireball->SetSkillThatSpawnedThisActor(this);
-	}, _castDelay, false); 
+		}, _castDelay, false);
 }

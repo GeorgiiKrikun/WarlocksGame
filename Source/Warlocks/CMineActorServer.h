@@ -35,8 +35,6 @@ public:
 
 	void SetSkillThatSpawnedThisActor(UCMine* mine);
 
-	void SetCorrespondingNumberOfThisActor(int32 num);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool _visibleOnThisInstance = false;
 
@@ -64,5 +62,4 @@ protected:
 	TArray<AActor*> _actorsCaught;
 
 	UCMine* _skillThatSpawnedThatActor;
-	int32 _correspondingNumberOfThisActor;
 };

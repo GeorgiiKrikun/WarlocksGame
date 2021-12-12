@@ -4,6 +4,7 @@
 #include "SacrificeBase.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h" 
+#include "CWarlockMainPlayerController.h"
 
 // Sets default values for this component's properties
 USacrificeBase::USacrificeBase() : _castDelay(1.0f)
@@ -46,6 +47,6 @@ void USacrificeBase::ServerSkillCast_Implementation(FVector location)
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
 		TArray<AActor*> ingnoredActors;
 		ingnoredActors.Add(GetOwner());
-		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors);
+		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors, GetOwner(), getControllerThatPossessThisSkill());
 		}, _castDelay, false);
 }

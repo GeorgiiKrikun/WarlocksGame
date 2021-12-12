@@ -3,6 +3,8 @@
 
 #include "CSkillBase.h"
 #include "Net/UnrealNetwork.h"
+#include "CWarlockMainPlayerController.h"
+#include "GoglikeLogging.h"
 
 
 // Sets default values for this component's properties
@@ -36,9 +38,30 @@ void UCSkillBase::BeginPreparation_Implementation()
 
 }
 
+ACWarlockMainPlayerController* UCSkillBase::getControllerThatPossessThisSkill()
+{
+	APawn* owner = Cast<APawn>(this->GetOwner());
+	if (!owner) {
+		GE("No owner of skill was found");
+		return nullptr;
+	}
+	
+	return Cast<ACWarlockMainPlayerController>(owner->GetController());
+}
+
 int UCSkillBase::getRequiredInputType()
 {
 	return 0;
+}
+
+void UCSkillBase::levelUp_Implementation()
+{
+	if (_skillLevel < _maxSkillLevel) ++_skillLevel;
+}
+
+bool UCSkillBase::canBeLeveledUp()
+{
+	return _skillLevel < _maxSkillLevel;
 }
 
 // Called when the game starts

@@ -9,7 +9,6 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 class UCFireball;
-//class UStaticMeshComponent;
 
 UCLASS()
 class WARLOCKS_API ACFireballActorServer : public AActor
@@ -37,7 +36,6 @@ public:
 	UProjectileMovementComponent* ProjectileMovement() const { return _movement; }
 
 	void SetSkillThatSpawnedThisActor(UCFireball* mine);
-	void SetCorrespondingNumberOfThisActor(int32 num);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -48,5 +46,4 @@ protected:
 	float _damage = 20.0f;
 
 	UCFireball* _skillThatSpawnedThatActor;
-	int32 _correspondingNumberOfThisActor;
 };
