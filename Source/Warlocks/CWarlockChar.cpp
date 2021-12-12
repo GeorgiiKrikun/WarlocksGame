@@ -69,9 +69,14 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		GetCharacterMovement()->AddImpulse(finalImpulse, false);
 
 		ACWarlockMainPlayerController* wc = Cast<ACWarlockMainPlayerController>(EventInstigator);
+		ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
 		if (wc) {
-			ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 			gameMode->addDamageStatisticsEntry(wc, Damage);
+			_previousInstigator = wc;
+		}
+		else if (_previousInstigator) {
+			gameMode->addDamageStatisticsEntry(_previousInstigator, Damage);
 		}
 
 		if (_HealthPoints <= 0.0f) {
@@ -92,7 +97,17 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 {
 	Super::InternalTakePointDamage(Damage, PointDamageEvent, EventInstigator, DamageCauser);
 	_HealthPoints = _HealthPoints - Damage;
-	GL("TOOK POINT DAMAGE");
+
+	ACWarlockMainPlayerController* wc = Cast<ACWarlockMainPlayerController>(EventInstigator);
+	ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if (wc) {
+		gameMode->addDamageStatisticsEntry(wc, Damage);
+		_previousInstigator = wc;
+	}
+	else if (_previousInstigator) {
+		gameMode->addDamageStatisticsEntry(_previousInstigator, Damage);
+	}
 
 	if (_HealthPoints < 0.0f) {
 		onDeathDelegate.Broadcast();
@@ -101,14 +116,11 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 	return Damage;
 }
 
-float ACWarlockChar::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
-	//Damage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	return Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-}
-
 void ACWarlockChar::Restart()
 {
 	Super::Restart();
+	_previousInstigator = nullptr;
+
 	if (!HasAuthority()) { // setup the player controller HUD again
 		ACWarlockMainPlayerController* controller = GetController<ACWarlockMainPlayerController>();
 		controller->callOnPawnRestartClient();

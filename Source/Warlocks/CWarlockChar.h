@@ -7,6 +7,7 @@
 #include "CWarlockChar.generated.h"
 
 class UParticleSystemComponent;
+class ACWarlockMainPlayerController;
 
 UCLASS()
 class WARLOCKS_API ACWarlockChar : public ACharacter
@@ -26,9 +27,6 @@ public:
 
 	float HealthPoints() const;
 	float MaxHealthPoints() const;
-
-	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
 
 	FOnDeath onDeathDelegate;
 	FOnRestart onRestartDelegate;
@@ -51,6 +49,12 @@ protected:
 
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	// To track who dealt damage when there is no correct instigator
+	ACWarlockMainPlayerController* _previousInstigator;
+
+
+
 
 	UFUNCTION(Server, Reliable)
 	void death();

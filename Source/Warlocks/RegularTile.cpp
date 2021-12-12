@@ -44,8 +44,8 @@ void ARegularTile::Tick(float DeltaTime)
 	for (int i = 0; i < overlappingActors.Num(); ++i) {
 		ACWarlockChar* warlock = dynamic_cast<ACWarlockChar*>(overlappingActors[i]);
 		if (!warlock) continue;
-		warlock->TakeDamage(10.0f * DeltaTime, FDamageEvent(), nullptr, nullptr);
-		GL("Heh");
+
+		warlock->TakeDamage(10.0f * DeltaTime, FPointDamageEvent(), nullptr, nullptr);
 	}
 
 
