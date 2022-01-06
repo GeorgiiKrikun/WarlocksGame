@@ -55,9 +55,12 @@ protected:
 	float _currentCooldown;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	int _skillLevel;
+	int _skillLevel = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	int _maxSkillLevel;
+	int _maxSkillLevel = 3;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Replicated)
+	TArray<int> _costToLevelUpAtLevel;
 
 
 

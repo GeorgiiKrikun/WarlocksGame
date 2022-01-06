@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "CWarlockMainPlayerController.h"
 #include "GoglikeLogging.h"
+#include "CPlayerState.h"
 
 
 // Sets default values for this component's properties
@@ -13,8 +14,10 @@ UCSkillBase::UCSkillBase()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-
+	_costToLevelUpAtLevel.SetNum(_maxSkillLevel+1);
+	for (int i = 0; i <= _maxSkillLevel; ++i) {
+		_costToLevelUpAtLevel[i] = 5;
+	}
 
 }
 
@@ -56,12 +59,14 @@ int UCSkillBase::getRequiredInputType()
 
 void UCSkillBase::levelUp_Implementation()
 {
-	if (_skillLevel < _maxSkillLevel) ++_skillLevel;
+	if (canBeLeveledUp()) ++_skillLevel;
 }
 
 bool UCSkillBase::canBeLeveledUp()
 {
-	return _skillLevel < _maxSkillLevel;
+	if ( _skillLevel >= _maxSkillLevel ) return false;
+	if ( getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>()->Coins() < _costToLevelUpAtLevel[_skillLevel] ) return false;
+	return true;
 }
 
 // Called when the game starts
