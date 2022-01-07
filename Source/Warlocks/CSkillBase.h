@@ -9,10 +9,15 @@
 
 class ACWarlockMainPlayerController;
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWarpEventSignature);
+
 UCLASS(Blueprintable, BlueprintType)
 class WARLOCKS_API UCSkillBase : public UActorComponent
 {
 	GENERATED_BODY()
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelChanged, int, oldLevel, int, newLevel);
+
 
 public:
 	// Sets default values for this component's properties
@@ -43,6 +48,9 @@ public:
 
 	int SkillLevel() const { return _skillLevel; }
 
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnLevelChange"))
+	FOnSkillLevelChanged onSkillLevelChanged;
+
 
 protected:
 	// Called when the game starts
@@ -54,10 +62,16 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCooldown;
 
+	/**
+	 * 0 = Exists as a component in the player but cannot be used yet
+	 * 1,2,3... Actual levels
+	 */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _skillLevel = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _maxSkillLevel = 3;
+
+
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Replicated)
 	TArray<int> _costToLevelUpAtLevel;
