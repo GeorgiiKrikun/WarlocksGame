@@ -141,7 +141,7 @@ int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
 		if (PlayerController) {
 			ACWarlockChar* pawn = PlayerController->GetPawn<ACWarlockChar>();
-			if (pawn) numberPlayersLeftAlive++;
+			if (pawn && !pawn->Dead()) numberPlayersLeftAlive++;
 		}
 	}
 	return numberPlayersLeftAlive;
@@ -152,7 +152,7 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 	if (!controller) return;
 	ACWarlockChar* pawn = controller->GetPawn<ACWarlockChar>();
 	if (pawn && respawnEvenIfAlive) {
-		pawn->Destroy();
+		//pawn->Destroy();
 		RestartPlayer(controller);
 	} else if (!pawn) {
 		RestartPlayer(controller);

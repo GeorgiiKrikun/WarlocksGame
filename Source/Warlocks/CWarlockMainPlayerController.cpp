@@ -49,7 +49,12 @@ void ACWarlockMainPlayerController::reactOnPawnDeath()
 	GL("REACT ON PAWN DEATH");
 	APawn* pawn = this->GetPawn();
 	if (!pawn) return;
+	if (HasAuthority()) {
+		ACWarlockChar* character = Cast<ACWarlockChar>(pawn);
+		character->SetDead(true);
+		OnPawnDeath.Broadcast();
+	}
 
-	UnPossess();
-	pawn->Destroy();
+	//UnPossess();
+	//pawn->Destroy();
 }

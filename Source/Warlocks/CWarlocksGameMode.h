@@ -60,6 +60,7 @@ public:
 
 	void Tick(float DeltaSeconds) override;
 
+
 private:
 	bool _bRespawnGuard = false;
 

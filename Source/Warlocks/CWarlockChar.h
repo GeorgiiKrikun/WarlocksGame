@@ -33,6 +33,9 @@ public:
 
 	void Restart() override;
 
+	bool Dead() const { return _isDead; }
+	void SetDead(bool val) { _isDead = val; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -45,19 +48,20 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _MaxHealthPoints;
 
-	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_Dead)
+	bool _isDead = false;
 
+	UFUNCTION()
+	void OnRep_Dead();
+
+	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	// To track who dealt damage when there is no correct instigator
-	ACWarlockMainPlayerController* _previousInstigator;
+	ACWarlockMainPlayerController* _previousDamageInstigator;
 
 
-
-
-	UFUNCTION(Server, Reliable)
-	void death();
 
 
 

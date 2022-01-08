@@ -34,6 +34,7 @@ void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACWarlockChar, _HealthPoints);
 	DOREPLIFETIME(ACWarlockChar, _MaxHealthPoints);
+	DOREPLIFETIME(ACWarlockChar, _isDead);
 }
 
 float ACWarlockChar::HealthPoints() const
@@ -55,10 +56,13 @@ void ACWarlockChar::BeginPlay()
 	
 }
 
-float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+void ACWarlockChar::OnRep_Dead()
 {
 
+}
 
+float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
 	if (HasAuthority()) {
 		_HealthPoints = _HealthPoints - Damage;
 		FVector origin = RadialDamageEvent.Origin;
@@ -73,10 +77,10 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 
 		if (wc) {
 			gameMode->addDamageStatisticsEntry(wc, Damage);
-			_previousInstigator = wc;
+			_previousDamageInstigator = wc;
 		}
-		else if (_previousInstigator) {
-			gameMode->addDamageStatisticsEntry(_previousInstigator, Damage);
+		else if (_previousDamageInstigator) {
+			gameMode->addDamageStatisticsEntry(_previousDamageInstigator, Damage);
 		}
 
 		if (_HealthPoints <= 0.0f) {
@@ -103,10 +107,10 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 
 	if (wc) {
 		gameMode->addDamageStatisticsEntry(wc, Damage);
-		_previousInstigator = wc;
+		_previousDamageInstigator = wc;
 	}
-	else if (_previousInstigator) {
-		gameMode->addDamageStatisticsEntry(_previousInstigator, Damage);
+	else if (_previousDamageInstigator) {
+		gameMode->addDamageStatisticsEntry(_previousDamageInstigator, Damage);
 	}
 
 	if (_HealthPoints < 0.0f) {
@@ -119,7 +123,7 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 void ACWarlockChar::Restart()
 {
 	Super::Restart();
-	_previousInstigator = nullptr;
+	_previousDamageInstigator = nullptr;
 
 	if (!HasAuthority()) { // setup the player controller HUD again
 		ACWarlockMainPlayerController* controller = GetController<ACWarlockMainPlayerController>();
@@ -204,9 +208,3 @@ void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 {
 
 }
-
-void ACWarlockChar::death_Implementation() {
-
-
-}
-
