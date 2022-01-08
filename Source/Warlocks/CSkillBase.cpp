@@ -26,8 +26,12 @@ UCSkillBase::UCSkillBase()
 void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UCSkillBase, _skillLevel);
+	DOREPLIFETIME(UCSkillBase, _maxSkillLevel);
 	DOREPLIFETIME(UCSkillBase, _cooldown);
 	DOREPLIFETIME(UCSkillBase, _currentCooldown);
+	DOREPLIFETIME(UCSkillBase, _costToLevelUpAtLevel);
+
 }
 
 
@@ -59,7 +63,10 @@ int UCSkillBase::getRequiredInputType()
 
 void UCSkillBase::levelUp_Implementation()
 {
-	if (canBeLeveledUp()) ++_skillLevel;
+	if (!canBeLeveledUp()) return;
+	int oldlevel = _skillLevel;
+	++_skillLevel;
+	int newlevel = _skillLevel;
 }
 
 bool UCSkillBase::canBeLeveledUp()
@@ -67,6 +74,11 @@ bool UCSkillBase::canBeLeveledUp()
 	if ( _skillLevel >= _maxSkillLevel ) return false;
 	if ( getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>()->Coins() < _costToLevelUpAtLevel[_skillLevel] ) return false;
 	return true;
+}
+
+void UCSkillBase::OnRep_SkillLevel()
+{
+	onSkillLevelChanged.Broadcast(0, 0);
 }
 
 // Called when the game starts

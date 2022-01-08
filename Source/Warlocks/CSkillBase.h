@@ -51,6 +51,9 @@ public:
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnLevelChange"))
 	FOnSkillLevelChanged onSkillLevelChanged;
 
+	UFUNCTION()
+	void OnRep_SkillLevel();
+
 
 protected:
 	// Called when the game starts
@@ -66,7 +69,7 @@ protected:
 	 * 0 = Exists as a component in the player but cannot be used yet
 	 * 1,2,3... Actual levels
 	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_SkillLevel)
 	int _skillLevel = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _maxSkillLevel = 3;
