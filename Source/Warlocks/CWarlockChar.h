@@ -34,7 +34,7 @@ public:
 	void Restart() override;
 
 	bool Dead() const { return _isDead; }
-	void SetDead(bool val) { _isDead = val; }
+	void SetDead(bool val);
 
 protected:
 	// Called when the game starts

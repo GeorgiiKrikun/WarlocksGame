@@ -124,11 +124,21 @@ void ACWarlockChar::Restart()
 {
 	Super::Restart();
 	_previousDamageInstigator = nullptr;
-
+	if (HasAuthority()) {
+		GL("RESTART CHARACTER");
+		_isDead = false;
+		_HealthPoints = MaxHealthPoints();
+	}
 	if (!HasAuthority()) { // setup the player controller HUD again
 		ACWarlockMainPlayerController* controller = GetController<ACWarlockMainPlayerController>();
 		controller->callOnPawnRestartClient();
 	}
+}
+
+void ACWarlockChar::SetDead(bool val)
+{
+	_isDead = val;
+
 }
 
 // Called every frame

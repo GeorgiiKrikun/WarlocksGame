@@ -104,7 +104,7 @@ void ACWarlocksGameMode::ReactOnDeathInterlude()
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		RespawnPlayer(PlayerController, false);
+		RespawnPlayer(PlayerController, true);
 	}
 	_bRespawnGuard = false;
 }
@@ -152,7 +152,6 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 	if (!controller) return;
 	ACWarlockChar* pawn = controller->GetPawn<ACWarlockChar>();
 	if (pawn && respawnEvenIfAlive) {
-		//pawn->Destroy();
 		RestartPlayer(controller);
 	} else if (!pawn) {
 		RestartPlayer(controller);

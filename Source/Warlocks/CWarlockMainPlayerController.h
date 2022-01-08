@@ -18,6 +18,7 @@ class WARLOCKS_API ACWarlockMainPlayerController : public APlayerController
 public:
 	UFUNCTION(Client, Reliable)
 	void callOnPawnRestartClient();
+
 	UFUNCTION(BlueprintNativeEvent)
 	void OnPawnRestartClient();
 
