@@ -73,14 +73,16 @@ void ACWarlocksGameMode::ReactOnDeathBattle()
     
 	// respawn everyone
     if (numberPlayersLeftAlive > 1) return;
-    _bRespawnGuard = true;
-    GW("This game has ended");
-    for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
-    {
-    	ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-    	RespawnPlayer(PlayerController);
-    }
-    _bRespawnGuard = false;
+
+
+	_bRespawnGuard = true;
+	GW("This game has ended");
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		RespawnPlayer(PlayerController);
+	}
+	_bRespawnGuard = false;
 
 	// begin interlude
 	_currentLengthOfInterlude = _lengthOfInterlude;
@@ -104,7 +106,7 @@ void ACWarlocksGameMode::ReactOnDeathInterlude()
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		RespawnPlayer(PlayerController, true);
+		RespawnPlayer(PlayerController);
 	}
 	_bRespawnGuard = false;
 }
@@ -117,7 +119,7 @@ void ACWarlocksGameMode::ReactOnExitInterlude()
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		RespawnPlayer(PlayerController, true);
+		RespawnPlayer(PlayerController);
 	}
 	_bRespawnGuard = false;
 }
@@ -150,13 +152,12 @@ int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
 void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive /*= true*/)
 {
 	if (!controller) return;
-	ACWarlockChar* pawn = controller->GetPawn<ACWarlockChar>();
-	if (pawn && respawnEvenIfAlive) {
-		RestartPlayer(controller);
-	} else if (!pawn) {
-		RestartPlayer(controller);
-	}
-
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this,controller]() {
+		ACWarlockChar* character = controller->GetPawn<ACWarlockChar>();
+		if (character) character->SetDead(false);
+		else {GE("Could not respawn character, which is empty!");}
+	}, _respawnDelay, false);
 }
 
 FString FDamageStatistics::pop()

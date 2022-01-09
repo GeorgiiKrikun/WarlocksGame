@@ -55,6 +55,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _DamageForCoin = 30.0f;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _respawnDelay = 1.0f;
+
 
 	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);
 

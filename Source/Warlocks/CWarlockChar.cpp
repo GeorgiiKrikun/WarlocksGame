@@ -59,10 +59,9 @@ void ACWarlockChar::BeginPlay()
 
 void ACWarlockChar::OnRep_Dead()
 {
-	if (_isDead) {
-		UCapsuleComponent* capsule = this->GetCapsuleComponent();
-		capsule->SetCollisionResponseToChannels(_collisionDead);
-	}
+	UCapsuleComponent* capsule = this->GetCapsuleComponent();
+	if (_isDead)  capsule->SetCollisionResponseToChannels(_collisionDead);
+	else capsule->SetCollisionResponseToChannels(_collisionDefault);
 }
 
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
@@ -127,10 +126,11 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 void ACWarlockChar::Restart()
 {
 	Super::Restart();
+	GW("THIS FUCNTION SHOULD NOT BE USED, WDYD?");
 	_previousDamageInstigator = nullptr;
 	if (HasAuthority()) {
 		GL("RESTART CHARACTER");
-		_isDead = false;
+		SetDead(false);
 		_HealthPoints = MaxHealthPoints();
 	}
 	if (!HasAuthority()) { // setup the player controller HUD again
@@ -143,9 +143,18 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 {
 	_isDead = val;
 	if (HasAuthority() && _isDead) {
+		GL("SET DEAD");
 		this->SetHidden(true);
 		UCapsuleComponent* capsule = this->GetCapsuleComponent();
 		capsule->SetCollisionResponseToChannels(_collisionDead);
+	}
+	else if (HasAuthority() && !_isDead)
+	{
+		GL("SET UNDEAD");
+		_HealthPoints = MaxHealthPoints();
+		this->SetHidden(false);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDefault);
 	}
 
 }
