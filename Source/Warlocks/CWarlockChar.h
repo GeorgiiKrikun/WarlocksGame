@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Engine/EngineTypes.h"
 #include "CWarlockChar.generated.h"
 
 class UParticleSystemComponent;
 class ACWarlockMainPlayerController;
+
+
 
 UCLASS()
 class WARLOCKS_API ACWarlockChar : public ACharacter
@@ -34,6 +37,8 @@ public:
 	void Restart() override;
 
 	bool Dead() const { return _isDead; }
+
+	UFUNCTION(Server,Reliable)
 	void SetDead(bool val);
 
 protected:
@@ -68,7 +73,9 @@ protected:
 
 
 
+
 public:
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -115,5 +122,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _sacrificeAnimationPlayTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FCollisionResponseContainer _collisionDefault;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FCollisionResponseContainer _collisionDead;
 
 };

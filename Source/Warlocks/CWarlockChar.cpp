@@ -12,6 +12,7 @@
 #include "GameFramework/Pawn.h"
 #include "CWarlockMainPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -58,7 +59,10 @@ void ACWarlockChar::BeginPlay()
 
 void ACWarlockChar::OnRep_Dead()
 {
-
+	if (_isDead) {
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDead);
+	}
 }
 
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
@@ -135,9 +139,14 @@ void ACWarlockChar::Restart()
 	}
 }
 
-void ACWarlockChar::SetDead(bool val)
+void ACWarlockChar::SetDead_Implementation(bool val)
 {
 	_isDead = val;
+	if (HasAuthority() && _isDead) {
+		this->SetHidden(true);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDead);
+	}
 
 }
 
