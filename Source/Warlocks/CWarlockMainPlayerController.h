@@ -30,6 +30,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void onInterludeBegin(const FString& text);
 
+	UFUNCTION(Client, Reliable)
+	void callOnInterludeEnd();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void onInterludeEnd();
+
 
 protected:
 	void OnPossess(APawn* aPawn) override;

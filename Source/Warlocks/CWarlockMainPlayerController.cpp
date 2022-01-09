@@ -26,6 +26,16 @@ void ACWarlockMainPlayerController::onInterludeBegin_Implementation(const FStrin
 
 }
 
+void ACWarlockMainPlayerController::callOnInterludeEnd_Implementation()
+{
+	onInterludeEnd();
+}
+
+void ACWarlockMainPlayerController::onInterludeEnd_Implementation()
+{
+
+}
+
 void ACWarlockMainPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);

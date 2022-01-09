@@ -36,6 +36,8 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 
 	void ReactOnDeathInterlude();
 
+	void ReactOnEnterInterlude();
+
 	void ReactOnExitInterlude();
 
 	void AwardCoinsAccordingToStats();
