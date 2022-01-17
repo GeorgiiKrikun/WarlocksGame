@@ -6,6 +6,7 @@
 #include "GoglikeLogging.h"
 #include "CWarlockChar.h"
 #include "CWarlockMainPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void ACWarlocksGameMode::StartPlay() {
@@ -30,13 +31,29 @@ void ACWarlocksGameMode::Tick(float DeltaSeconds)
 		ReactOnExitInterlude();
 	}
 
+	if (_currentTreshold > _minThreshold) {
+		_currentTreshold -= _thresholdVelocityDecrease * DeltaSeconds;
+	}
+
 	_currentLengthOfInterlude -= DeltaSeconds;
+
+	ACGameStateBase* gamestate = Cast<ACGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	if (!gamestate) {
+		GE("Could not find gamestate");
+		return;
+	}
+
+	gamestate->_thresholdValue = _currentTreshold;
+	
+
+	
 }
 
 
 void ACWarlocksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	_currentTreshold = _beginThreshold;
 }
 
 void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
@@ -96,6 +113,8 @@ void ACWarlocksGameMode::ReactOnDeathInterlude()
 void ACWarlocksGameMode::ReactOnEnterInterlude()
 {
 
+	_currentTreshold = _beginThreshold;
+
 	_bRespawnGuard = true;
 	GW("This game has ended");
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
@@ -119,6 +138,9 @@ void ACWarlocksGameMode::ReactOnEnterInterlude()
 
 void ACWarlocksGameMode::ReactOnExitInterlude()
 {
+	_currentTreshold = _beginThreshold;
+
+
 	if (_bRespawnGuard) return;
 	_bRespawnGuard = true;
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)

@@ -56,9 +56,25 @@ public:
 	float _currentLengthOfInterlude = -1.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _DamageForCoin = 30.0f;
+	// Arena size
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _minThreshold = 100.0f;
+
+	// Arena size
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _beginThreshold = 2000.0f;
+
+	// Arena size
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _thresholdVelocityDecrease = 10.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _currentTreshold = 1.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _respawnDelay = 1.0f;
+
+
 
 
 	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);

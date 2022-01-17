@@ -14,5 +14,13 @@ class WARLOCKS_API ACGameStateBase : public AGameState
 {
 	GENERATED_BODY()
 
+public:
+
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
+
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+	float _thresholdValue;
+
 	
 };
