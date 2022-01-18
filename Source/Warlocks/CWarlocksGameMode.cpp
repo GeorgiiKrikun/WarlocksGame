@@ -15,6 +15,7 @@ void ACWarlocksGameMode::StartPlay() {
 
 void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage)
 {
+	GW("ADD DAMAGE STATISTICS ENTRY %d, %f", from, damage);
 	if (!_damageStatistics._damageDoneMap.Contains(from)) {
 		GE("Cannot add damage statistic entry, because controller was not registered in game mode");
 		return;     
@@ -25,7 +26,6 @@ void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController*
 void ACWarlocksGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	GL("Current interlude time = %f", _currentLengthOfInterlude);
 	if (_currentLengthOfInterlude >= 0.0f && ((_currentLengthOfInterlude - DeltaSeconds) <= 0.0f)) {
 		GW("Exiting Interlude");
 		ReactOnExitInterlude();
@@ -140,6 +140,8 @@ void ACWarlocksGameMode::ReactOnEnterInterlude()
 	AwardCoinsAccordingToStats();
 	FString damageStats = _damageStatistics.pop();
 
+	GW("damage stats %s", *damageStats);
+
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
@@ -214,9 +216,9 @@ FString FDamageStatistics::pop()
 		res += " Coins: ";
 		res.AppendInt(pair.Key->GetPlayerState<ACPlayerState>()->Coins());
 		res += "\n";
-	}
 
-	_damageDoneMap.Empty();
+		_damageDoneMap[pair.Key] = 0.0f;
+	}
 
 	return res;
 
