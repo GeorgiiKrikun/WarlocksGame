@@ -153,13 +153,17 @@ void ACWarlocksGameMode::ReactOnExitInterlude()
 {
 	_currentTreshold = _beginThreshold;
 
-
+	
 	if (_bRespawnGuard) return;
 	_bRespawnGuard = true;
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		RespawnPlayer(PlayerController);
+		AActor* playerStart = FindPlayerStart(PlayerController);
+
+		if (playerStart) RespawnPlayer(PlayerController, false, true, playerStart->GetActorLocation(), playerStart->GetActorRotation());
+		else RespawnPlayer(PlayerController);
+
 		PlayerController->callOnInterludeEnd();
 	}
 	_bRespawnGuard = false;
@@ -190,14 +194,19 @@ int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
 	return numberPlayersLeftAlive;
 }
 
-void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive /*= true*/)
+void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive /*= true*/, bool atSpecifiedLocation /*= false*/, FVector location /*= FVector(0,0,0)*/, FRotator rotation/* = FRotator(0, 0, 0)*/)
 {
 	if (!controller) return;
 	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this,controller]() {
+	GetWorld()->GetTimerManager().SetTimer(handle, [this,controller, atSpecifiedLocation, location, rotation]() {
 		ACWarlockChar* character = controller->GetPawn<ACWarlockChar>();
 		if (character) character->SetDead(false);
 		else {GE("Could not respawn character, which is empty!");}
+
+		if (atSpecifiedLocation) {
+			character->TeleportTo(location, rotation);
+		}
+
 	}, _respawnDelay, false);
 }
 

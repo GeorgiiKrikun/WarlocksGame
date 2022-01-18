@@ -44,8 +44,7 @@ class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 
 	int CheckNumberOfPlayersAlive();
 
-	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true);
-
+	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true, bool atSpecifiedLocation = false, FVector location = FVector(0,0,0), FRotator rotation = FRotator(0,0,0));
 
 public:
 	void StartPlay() override;
