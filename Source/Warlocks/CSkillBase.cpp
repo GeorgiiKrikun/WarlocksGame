@@ -64,9 +64,13 @@ int UCSkillBase::getRequiredInputType()
 void UCSkillBase::levelUp_Implementation()
 {
 	if (!canBeLeveledUp()) return;
+
 	int oldlevel = _skillLevel;
 	++_skillLevel;
 	int newlevel = _skillLevel;
+
+	ACPlayerState* state = getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>();
+	if (state) state->SetCoins(state->Coins() - _costToLevelUpAtLevel[oldlevel]);
 }
 
 bool UCSkillBase::canBeLeveledUp()
