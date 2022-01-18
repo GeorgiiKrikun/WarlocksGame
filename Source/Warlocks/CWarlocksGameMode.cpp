@@ -43,6 +43,17 @@ void ACWarlocksGameMode::Tick(float DeltaSeconds)
 		return;
 	}
 
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
+		APawn* pawn = Cast<APawn>(PlayerController->GetPawn());
+		FVector Location2D = pawn->GetActorLocation();
+		Location2D.Z = 0;
+
+		float distance = FVector::Dist(Location2D, FVector(0, 0, 0));
+		if (pawn && (distance > _currentTreshold)) pawn->TakeDamage(10.0f*DeltaSeconds, FPointDamageEvent(), nullptr, nullptr);
+	}
+
 	gamestate->_thresholdValue = _currentTreshold;
 	
 
