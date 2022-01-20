@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ActorSpawnedBySkill.h"
 #include "Templates/SubclassOf.h"
 #include "CMineActorServer.generated.h"
 
@@ -11,7 +11,7 @@ class USphereComponent;
 class UCMine;
 
 UCLASS()
-class WARLOCKS_API ACMineActorServer : public AActor
+class WARLOCKS_API ACMineActorServer : public AActorSpawnedBySkill
 {
 	GENERATED_BODY()
 	

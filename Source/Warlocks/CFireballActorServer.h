@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ActorSpawnedBySkill.h"
 #include "CFireballActorServer.generated.h"
 
 class UProjectileMovementComponent;
@@ -11,7 +11,7 @@ class USphereComponent;
 class UCFireball;
 
 UCLASS()
-class WARLOCKS_API ACFireballActorServer : public AActor
+class WARLOCKS_API ACFireballActorServer : public AActorSpawnedBySkill
 {
 	GENERATED_BODY()
 	
