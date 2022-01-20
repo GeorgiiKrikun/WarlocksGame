@@ -129,4 +129,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FCollisionResponseContainer _collisionDead;
 
+	//Parry stuff
+	protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	bool _invulnerable;
+
+	public:
+	UFUNCTION(Server, Reliable)
+	void setInvulnerable(float duration);
+
 };

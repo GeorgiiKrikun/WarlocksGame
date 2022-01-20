@@ -24,6 +24,8 @@ ACWarlockChar::ACWarlockChar() : ACharacter()
 	_teleportAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TeleportAnimation"));
 	_sacrificeAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SacrificeAnimation"));
 
+	_invulnerable = false;
+
 
 	//_teleportAnimation->SetAttachement(BombMesh);
 	//PulseParticles->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
@@ -36,6 +38,7 @@ void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	DOREPLIFETIME(ACWarlockChar, _HealthPoints);
 	DOREPLIFETIME(ACWarlockChar, _MaxHealthPoints);
 	DOREPLIFETIME(ACWarlockChar, _isDead);
+	DOREPLIFETIME(ACWarlockChar, _invulnerable);
 }
 
 float ACWarlockChar::HealthPoints() const
@@ -67,6 +70,7 @@ void ACWarlockChar::OnRep_Dead()
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	if (HasAuthority()) {
+		if (_invulnerable) return 0.0f ;
 		_HealthPoints = _HealthPoints - Damage;
 		FVector origin = RadialDamageEvent.Origin;
 		FVector actorLocation = GetActorLocation();
@@ -235,4 +239,16 @@ void ACWarlockChar::playFireballAnimation_Implementation()
 void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 {
 
+}
+
+void ACWarlockChar::setInvulnerable_Implementation(float duration)
+{
+	_invulnerable = true;
+
+	GW("CHARACTER IS INVP");
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+		this->_invulnerable = false;
+		GW("!CHARACTER IS INVP");
+	}, duration, false);
 }
