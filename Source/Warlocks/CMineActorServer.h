@@ -33,8 +33,6 @@ public:
 	UFUNCTION()
 	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void SetSkillThatSpawnedThisActor(UCMine* mine);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool _visibleOnThisInstance = false;
 
@@ -61,5 +59,4 @@ protected:
 
 	TArray<AActor*> _actorsCaught;
 
-	UCMine* _skillThatSpawnedThatActor;
 };

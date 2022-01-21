@@ -90,11 +90,6 @@ void ACMineActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedCompone
 
 }
 
-void ACMineActorServer::SetSkillThatSpawnedThisActor(UCMine* mine)
-{
-	_skillThatSpawnedThatActor = mine;
-}
-
 //void ACMineActorServer::SetCorrespondingNumberOfThisActor(int32 num)
 //{
 //	_correspondingNumberOfThisActor = num;

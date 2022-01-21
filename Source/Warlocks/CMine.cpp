@@ -31,5 +31,5 @@ void UCMine::ServerSkillCast_Implementation(FVector location)
 	FRotator spawnRotation = direction.ToOrientationRotator();
 
 	ACMineActorServer* spawnedMine = Cast<ACMineActorServer>(GetWorld()->SpawnActor(_mine, &spawnLocation, &spawnRotation));
-	spawnedMine->SetSkillThatSpawnedThisActor(this);
+	spawnedMine->SetSkillThatSpawnedThatActor(this);
 }

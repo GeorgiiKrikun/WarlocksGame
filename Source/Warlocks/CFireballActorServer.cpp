@@ -7,6 +7,8 @@
 #include "CFireball.h"
 #include "CWarlockMainPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "CWarlockChar.h"
+#include "GoglikeLogging.h"
 
 
 // Sets default values
@@ -62,10 +64,29 @@ void ACFireballActorServer::Tick(float DeltaTime)
 
 void ACFireballActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (HasAuthority() && _skillThatSpawnedThatActor) {
+	if (!HasAuthority()) return;
+
+	ACWarlockChar* character = Cast<ACWarlockChar>(otherActor);
+	UCSkillBase* similarSkillInOtherActor = nullptr;
+
+	SkillThatSpawnedThatActor()->GetClass();
+
+	if (SkillThatSpawnedThatActor()) 
+		similarSkillInOtherActor = Cast<UCSkillBase>(otherActor->GetComponentByClass(SkillThatSpawnedThatActor()->GetClass()));		
+	
+	if (similarSkillInOtherActor) { GW("skill found"); }
+	else { GW("Skill not found"); }
+
+	if (character && character->GetInvulnerable()) {
+		this->sendBackToSender(similarSkillInOtherActor);
+		return;
+	}
+
+	
+	if (SkillThatSpawnedThatActor()) {
 		TArray<AActor*> ingnoredActors;
 
-		AController* instigator = _skillThatSpawnedThatActor->getControllerThatPossessThisSkill();
+		AController* instigator = SkillThatSpawnedThatActor()->getControllerThatPossessThisSkill();
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), _damage, this->GetActorLocation(), 200.0f, 0, ingnoredActors, this, instigator);
 		Destroy();
 	}
@@ -77,9 +98,8 @@ void ACFireballActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedCom
 
 }
 
-void ACFireballActorServer::SetSkillThatSpawnedThisActor(UCFireball* mine)
+UMovementComponent* ACFireballActorServer::ProjectileMovement() const
 {
-	_skillThatSpawnedThatActor = mine;
+	return _movement;
 }
-
 

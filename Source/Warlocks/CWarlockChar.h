@@ -135,7 +135,9 @@ public:
 	bool _invulnerable;
 
 	public:
+
 	UFUNCTION(Server, Reliable)
 	void setInvulnerable(float duration);
 
+	bool GetInvulnerable();
 };

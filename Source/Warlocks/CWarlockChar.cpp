@@ -252,3 +252,8 @@ void ACWarlockChar::setInvulnerable_Implementation(float duration)
 		GW("!CHARACTER IS INVP");
 	}, duration, false);
 }
+
+bool ACWarlockChar::GetInvulnerable()
+{
+	return _invulnerable;
+}

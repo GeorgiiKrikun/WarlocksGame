@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "ActorSpawnedBySkill.generated.h"
 
+class UCSkillBase;
+class UMovementComponent;
+
 UCLASS()
 class WARLOCKS_API AActorSpawnedBySkill : public AActor 
 { 
@@ -23,4 +26,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual UMovementComponent* ProjectileMovement() const;
+
+	/*
+	* Return true if it was able to send actor back to sender; false otherwise
+	*/
+	virtual bool sendBackToSender(UCSkillBase* newSkillSender = nullptr);
+
+
+protected:
+	UCSkillBase* _skillThatSpawnedThatActor;
+
+public:
+	UCSkillBase* SkillThatSpawnedThatActor() const;
+	void SetSkillThatSpawnedThatActor(UCSkillBase* val);
 };

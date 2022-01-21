@@ -30,7 +30,8 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	FTimerHandle handle;
 	GetWorld()->GetTimerManager().SetTimer(handle, [this, spawnLocation, spawnRotation]() {
 		ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation));
-		spawnedFireball->ProjectileMovement()->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
-		spawnedFireball->SetSkillThatSpawnedThisActor(this);
+		auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
+		projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
+		spawnedFireball->SetSkillThatSpawnedThatActor(this);
 		}, _castDelay, false);
 }

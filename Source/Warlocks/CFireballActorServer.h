@@ -33,17 +33,16 @@ public:
 	UFUNCTION()
 	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UProjectileMovementComponent* ProjectileMovement() const { return _movement; }
+	UMovementComponent* ProjectileMovement() const override;
 
-	void SetSkillThatSpawnedThisActor(UCFireball* mine);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UProjectileMovementComponent* _movement;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USphereComponent* _collisionSphere;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _damage = 20.0f;
 
-	UCFireball* _skillThatSpawnedThatActor;
 };
