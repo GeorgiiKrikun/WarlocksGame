@@ -71,6 +71,8 @@ void UCSkillBase::levelUp_Implementation()
 
 	ACPlayerState* state = getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>();
 	if (state) state->SetCoins(state->Coins() - _costToLevelUpAtLevel[oldlevel]);
+
+	onSkillLevelChanged.Broadcast(0, 0);
 }
 
 bool UCSkillBase::canBeLeveledUp()
