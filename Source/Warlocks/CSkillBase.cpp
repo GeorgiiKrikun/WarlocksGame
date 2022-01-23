@@ -87,11 +87,24 @@ void UCSkillBase::OnRep_SkillLevel()
 	onSkillLevelChanged.Broadcast(0, 0);
 }
 
+UTexture2D* UCSkillBase::GetSkillIcon() const
+{
+
+	return _skillIcon;
+}
+
+FText UCSkillBase::GetSkillDescription() const
+{
+	return _skillDescription;
+}
+
 // Called when the game starts
 void UCSkillBase::BeginPlay()
 {
 	Super::BeginPlay();
 	SetIsReplicated(true);
+
+	if (_skillIcon) _skillIcon->MaxTextureSize = 36;
 }
 
 

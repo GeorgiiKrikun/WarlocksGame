@@ -8,6 +8,7 @@
 #include "CSkillBase.generated.h"
 
 class ACWarlockMainPlayerController;
+class UTexture2D;
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWarpEventSignature);
 
@@ -54,7 +55,10 @@ public:
 	UFUNCTION()
 	void OnRep_SkillLevel();
 
+	UFUNCTION(BlueprintCallable)
+	UTexture2D* GetSkillIcon() const;
 
+	virtual FText GetSkillDescription() const;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -76,8 +80,13 @@ protected:
 
 
 
+
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Replicated)
 	TArray<int> _costToLevelUpAtLevel;
+
+
+
 
 
 
@@ -85,5 +94,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+
+	// UI PART
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* _skillIcon = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FText _skillDescription;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	    bool _isSkillSelectedInSkillList = false;
 
 };
