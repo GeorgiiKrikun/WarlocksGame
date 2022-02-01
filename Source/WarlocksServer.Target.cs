@@ -10,5 +10,8 @@ public class WarlocksServerTarget : TargetRules //Change this line according to 
         Type = TargetType.Server;
         DefaultBuildSettings = BuildSettingsVersion.V2;
         ExtraModuleNames.Add("Warlocks"); //Change this ne according to the name of your project
+        
+        // Ensure that we compile with the Steam OSS
+        //UEBuildConfiguration.bCompileSteamOSS = true;
     }
 }

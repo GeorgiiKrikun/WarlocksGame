@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 
+//TEXT("Text, %d %f %s"), intVar, floatVar, *fstringVar)
+
 DECLARE_LOG_CATEGORY_EXTERN(Goglike, Log, All);
 #define GW(X, ...) UE_LOG(Goglike, Warning, TEXT(X), __VA_ARGS__);
 #define GL(X, ...) UE_LOG(Goglike, Log, TEXT(X), __VA_ARGS__);

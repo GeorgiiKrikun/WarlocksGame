@@ -11,5 +11,8 @@ public class WarlocksTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "Warlocks" } );
+		
+		// Ensure that we compile with the Steam OSS
+		//UEBuildConfiguration.bCompileSteamOSS = true;
 	}
 }

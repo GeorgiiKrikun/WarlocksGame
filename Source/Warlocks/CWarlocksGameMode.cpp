@@ -7,6 +7,7 @@
 #include "CWarlockChar.h"
 #include "CWarlockMainPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "OnlineSubsystem.h"
 
 
 void ACWarlocksGameMode::StartPlay() {
@@ -65,6 +66,7 @@ void ACWarlocksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	_currentTreshold = _beginThreshold;
+
 }
 
 void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
@@ -196,6 +198,8 @@ int ACWarlocksGameMode::CheckNumberOfPlayersAlive()
 
 void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive /*= true*/, bool atSpecifiedLocation /*= false*/, FVector location /*= FVector(0,0,0)*/, FRotator rotation/* = FRotator(0, 0, 0)*/)
 {
+
+	GL("RESPAWN CALLED")
 	if (!controller) return;
 	FTimerHandle handle;
 	GetWorld()->GetTimerManager().SetTimer(handle, [this,controller, atSpecifiedLocation, location, rotation]() {
@@ -204,7 +208,7 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 		else {GE("Could not respawn character, which is empty!");}
 
 		if (atSpecifiedLocation) {
-			character->TeleportTo(location, rotation);
+			if (character) character->TeleportTo(location, rotation);
 		}
 
 	}, _respawnDelay, false);

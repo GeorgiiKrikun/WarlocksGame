@@ -103,8 +103,6 @@ void UCSkillBase::BeginPlay()
 {
 	Super::BeginPlay();
 	SetIsReplicated(true);
-
-	if (_skillIcon) _skillIcon->MaxTextureSize = 36;
 }
 
 

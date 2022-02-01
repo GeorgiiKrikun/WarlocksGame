@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "OnlineSubsystem.h"
 #include "CWarlockMainPlayerController.generated.h"
+
 
 /**
  * 
@@ -37,13 +39,35 @@ public:
 	void onInterludeEnd();
 
 
+// ONLINE SUBSYSTEM INTERFACE
+	UFUNCTION(BlueprintCallable)
+	bool connectToSteam();
+	
+	UFUNCTION(BlueprintCallable)
+	void createLobby(FName Name = TEXT("HEH"));
+
+	UFUNCTION(BlueprintCallable)
+	void scanSessions();
+
+
+
+//
+
+
 protected:
 	void OnPossess(APawn* aPawn) override;
 
 	void OnUnPossess() override;
 
+
+	void BeginPlay() override;
+
 private:
 	UFUNCTION()
 	void reactOnPawnDeath();
+
+	IOnlineSubsystem* _system;
+	IOnlineFriendsPtr _friendsInterface;
+	IOnlineSessionPtr _sessionInterface;
 
 };
