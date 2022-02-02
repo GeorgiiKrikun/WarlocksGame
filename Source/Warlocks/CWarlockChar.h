@@ -85,7 +85,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(Client, Reliable)
+	UFUNCTION(Client, Reliable, BlueprintCallable)
 	void stopMovementFor(float seconds);
 
 	UFUNCTION(Server, Reliable)
@@ -137,6 +137,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool _invulnerable;
 
+	bool _acceptsMovementInput=true;
 
 	public:
 

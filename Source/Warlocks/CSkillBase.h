@@ -71,6 +71,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCastTime = 0.0f;
 
+	void startCastTime();
+
 	/**
 	 * 0 = Exists as a component in the player but cannot be used yet
 	 * 1,2,3... Actual levels

@@ -39,7 +39,7 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 void UCSkillBase::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
 {
-	// do nothing club
+	
 }
 
 ACWarlockMainPlayerController* UCSkillBase::getControllerThatPossessThisSkill()
@@ -102,6 +102,11 @@ void UCSkillBase::BeginPlay()
 	SetIsReplicated(true);
 }
 
+
+void UCSkillBase::startCastTime()
+{
+	_currentCastTime = _castTime;
+}
 
 // Called every frame
 void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

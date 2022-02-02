@@ -178,12 +178,12 @@ void ACWarlockChar::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ACWarlockChar::Move_XAxis(float AxisValue)
 {
-	AddMovementInput(FVector(AxisValue, 0.0f, 0.0f));
+	if (_acceptsMovementInput) AddMovementInput(FVector(AxisValue, 0.0f, 0.0f));
 }
 
 void ACWarlockChar::Move_YAxis(float AxisValue)
 {
-	AddMovementInput(FVector(0.0f, AxisValue, 0.0f));
+	if (_acceptsMovementInput) AddMovementInput(FVector(0.0f, AxisValue, 0.0f));
 }
 
 void ACWarlockChar::playTeleportAnimation_Implementation(float time)
@@ -216,16 +216,11 @@ void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
 
 void  ACWarlockChar::stopMovementFor_Implementation(float seconds) 
 {
-	AController* controller = GetController();
-	if (!controller) {
-		GW("Could not fild controller, movement input failed");
-	}
 
-	controller->SetIgnoreMoveInput(true);
-
+	_acceptsMovementInput = false;
 	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [controller]() {
-			controller->SetIgnoreMoveInput(false);
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+			this->_acceptsMovementInput = true;
 		}, seconds, false);
 }
 

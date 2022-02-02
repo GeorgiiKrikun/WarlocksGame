@@ -14,6 +14,8 @@ int UCFireball::getRequiredInputType()
 void UCFireball::ServerSkillCast_Implementation(FVector location)
 {
 	if (_currentCooldown > 0.0f) return;
+	startCastTime();
+
 	_currentCooldown = _cooldown;
 
 	auto warlock = Cast<ACWarlockChar>(GetOwner());

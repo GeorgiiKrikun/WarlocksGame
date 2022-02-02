@@ -36,6 +36,8 @@ int USacrificeBase::getRequiredInputType()
 void USacrificeBase::ServerSkillCast_Implementation(FVector location)
 {
 	if (_currentCooldown > 0.0f) return;
+	startCastTime();
+
 	_currentCooldown = _cooldown;
 	ACharacter* casted = Cast<ACharacter>(GetOwner());
 	location = casted->GetActorLocation();
