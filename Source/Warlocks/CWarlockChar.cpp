@@ -13,6 +13,7 @@
 #include "CWarlockMainPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -160,22 +161,29 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 		UCapsuleComponent* capsule = this->GetCapsuleComponent();
 		capsule->SetCollisionResponseToChannels(_collisionDefault);
 	}
-
 }
 
 // Called every frame
 void ACWarlockChar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// Called to bind functionality to input
-void ACWarlockChar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ACWarlockChar::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACWarlockChar::Move_XAxis);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ACWarlockChar::Move_YAxis);
+}
 
+void ACWarlockChar::Move_XAxis(float AxisValue)
+{
+	AddMovementInput(FVector(AxisValue, 0.0f, 0.0f));
+}
 
+void ACWarlockChar::Move_YAxis(float AxisValue)
+{
+	AddMovementInput(FVector(0.0f, AxisValue, 0.0f));
 }
 
 void ACWarlockChar::playTeleportAnimation_Implementation(float time)
@@ -186,7 +194,6 @@ void ACWarlockChar::playTeleportAnimation_Implementation(float time)
 	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
 		_teleportAnimation->SetVisibility(false);
 		}, time, false);
-
 }
 
 void ACWarlockChar::startPlaySacrificeAnimation_Implementation()

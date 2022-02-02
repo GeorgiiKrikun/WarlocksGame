@@ -29,9 +29,6 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void ServerSkillCast(FVector location);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BeginPreparation();
-
 	ACWarlockMainPlayerController* getControllerThatPossessThisSkill();
 
 
@@ -68,6 +65,11 @@ protected:
 	float _cooldown;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCooldown;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _castTime = 0.0f; // by default, immediate
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _currentCastTime = 0.0f;
 
 	/**
 	 * 0 = Exists as a component in the player but cannot be used yet
