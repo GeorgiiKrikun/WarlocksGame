@@ -18,8 +18,6 @@ class WARLOCKS_API UCSkillBase : public UActorComponent
 	GENERATED_BODY()
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelChanged, int, oldLevel, int, newLevel);
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSkillCast, float);
-
 
 public:
 	// Sets default values for this component's properties
@@ -29,8 +27,6 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void ServerSkillCast(FVector location);
-
-	FOnSkillCast _skillCastDelegate;
 
 	ACWarlockMainPlayerController* getControllerThatPossessThisSkill();
 
@@ -59,6 +55,8 @@ public:
 	UTexture2D* GetSkillIcon() const;
 
 	virtual FText GetSkillDescription() const;
+	float CurrentCastTime() const { return _currentCastTime; }
+	float CastTime() const { return _castTime; }
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -74,6 +72,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCastTime = 0.0f;
 
+	UFUNCTION(NetMulticast, Reliable)
 	void startCastTime();
 
 	/**

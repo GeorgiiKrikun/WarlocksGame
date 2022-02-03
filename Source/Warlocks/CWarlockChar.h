@@ -9,6 +9,7 @@
 
 class UParticleSystemComponent;
 class ACWarlockMainPlayerController;
+class UCSkillBase;
 
 
 
@@ -50,19 +51,22 @@ public:
 	void Move_YAxis(float AxisValue);
 
 
-	// Cast time stuff
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	float _castTime = 0.0f;
+	// casting stuff
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_isCasting)
-	bool _isCasting = false;
+private:
 
-	UFUNCTION()
-	void OnRep_isCasting();
+	UPROPERTY(EditAnywhere)
+	UCSkillBase* _skillBeingCasted;
 
-	UFUNCTION()
-	void onCastedSkill(float castTime);
+public:
+	
+	void setCasting(UCSkillBase* skill);
 
+
+	UFUNCTION(BlueprintCallable)
+	UCSkillBase* getSkillBeingCasted();
+
+	//__END CASTING
 
 protected:
 	// Called when the game starts

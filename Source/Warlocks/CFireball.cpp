@@ -34,5 +34,5 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 		auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
 		projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
 		spawnedFireball->SetSkillThatSpawnedThatActor(this);
-		}, _castTime, false);
+		}, CastTime(), false);
 }

@@ -41,9 +41,6 @@ void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	DOREPLIFETIME(ACWarlockChar, _MaxHealthPoints);
 	DOREPLIFETIME(ACWarlockChar, _isDead);
 	DOREPLIFETIME(ACWarlockChar, _invulnerable);
-	DOREPLIFETIME(ACWarlockChar, _castTime);
-	DOREPLIFETIME(ACWarlockChar, _isCasting);
-
 }
 
 float ACWarlockChar::HealthPoints() const
@@ -64,10 +61,6 @@ void ACWarlockChar::BeginPlay()
 	_sacrificeAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TArray<UCSkillBase*> skillComponents;
 	this->GetComponents<UCSkillBase>(skillComponents);
-
-	for (int i = 0; i < skillComponents.Num(); ++i) {
-		skillComponents[i]->_skillCastDelegate.AddUObject(this, &ACWarlockChar::onCastedSkill);
-	}
 	
 }
 
@@ -177,10 +170,9 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 void ACWarlockChar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (_castTime > 0.0f) _castTime -= DeltaTime;
-	if (_castTime <= 0.0f) {
-		_isCasting = false;
+	if ( _skillBeingCasted && (_skillBeingCasted->CurrentCastTime() <= 0.0f)) {
 		_acceptsMovementInput = true;
+		_skillBeingCasted = nullptr;
 	}
 }
 
@@ -201,21 +193,15 @@ void ACWarlockChar::Move_YAxis(float AxisValue)
 	if (_acceptsMovementInput) AddMovementInput(FVector(0.0f, AxisValue, 0.0f));
 }
 
-void ACWarlockChar::OnRep_isCasting()
+void ACWarlockChar::setCasting(UCSkillBase* skill)
 {
-	if (_isCasting) {
-		_acceptsMovementInput = false;
-	}
-	else {
-		_acceptsMovementInput = true;
-	}
+	_skillBeingCasted = skill;
+	_acceptsMovementInput = false;
 }
 
-void ACWarlockChar::onCastedSkill(float castTime)
+UCSkillBase* ACWarlockChar::getSkillBeingCasted()
 {
-	_castTime = castTime;
-	_isCasting = true;
-	_acceptsMovementInput = false;
+	return _skillBeingCasted;
 }
 
 void ACWarlockChar::playTeleportAnimation_Implementation(float time)

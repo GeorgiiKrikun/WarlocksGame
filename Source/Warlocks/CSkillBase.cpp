@@ -6,6 +6,7 @@
 #include "CWarlockMainPlayerController.h"
 #include "GoglikeLogging.h"
 #include "CPlayerState.h"
+#include "CWarlockChar.h"
 
 
 // Sets default values for this component's properties
@@ -31,9 +32,6 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(UCSkillBase, _cooldown);
 	DOREPLIFETIME(UCSkillBase, _currentCooldown);
 	DOREPLIFETIME(UCSkillBase, _costToLevelUpAtLevel);
-	DOREPLIFETIME(UCSkillBase, _castTime);
-	DOREPLIFETIME(UCSkillBase, _currentCastTime);
-
 }
 
 
@@ -103,10 +101,12 @@ void UCSkillBase::BeginPlay()
 }
 
 
-void UCSkillBase::startCastTime()
+void UCSkillBase::startCastTime_Implementation()
 {
-	_currentCastTime = _castTime;
-	_skillCastDelegate.Broadcast(_castTime);
+	_currentCastTime = CastTime();
+	ACWarlockChar* warlock = Cast<ACWarlockChar>(GetOwner());
+	if (!warlock) return;
+	warlock->setCasting(this);
 }
 
 // Called every frame
@@ -114,5 +114,5 @@ void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (_currentCooldown > 0.0f) _currentCooldown -= DeltaTime;
-	if (_currentCastTime > 0.0f) _currentCastTime -= DeltaTime;
+	if (CurrentCastTime() > 0.0f) _currentCastTime = CurrentCastTime() - DeltaTime;
 }
