@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "CSkillBase.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -40,6 +41,9 @@ void ACWarlockChar::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	DOREPLIFETIME(ACWarlockChar, _MaxHealthPoints);
 	DOREPLIFETIME(ACWarlockChar, _isDead);
 	DOREPLIFETIME(ACWarlockChar, _invulnerable);
+	DOREPLIFETIME(ACWarlockChar, _castTime);
+	DOREPLIFETIME(ACWarlockChar, _isCasting);
+
 }
 
 float ACWarlockChar::HealthPoints() const
@@ -58,6 +62,12 @@ void ACWarlockChar::BeginPlay()
 	Super::BeginPlay();
 	_teleportAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	_sacrificeAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	TArray<UCSkillBase*> skillComponents;
+	this->GetComponents<UCSkillBase>(skillComponents);
+
+	for (int i = 0; i < skillComponents.Num(); ++i) {
+		skillComponents[i]->_skillCastDelegate.AddUObject(this, &ACWarlockChar::onCastedSkill);
+	}
 	
 }
 
@@ -167,6 +177,11 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 void ACWarlockChar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (_castTime > 0.0f) _castTime -= DeltaTime;
+	if (_castTime <= 0.0f) {
+		_isCasting = false;
+		_acceptsMovementInput = true;
+	}
 }
 
 void ACWarlockChar::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -184,6 +199,23 @@ void ACWarlockChar::Move_XAxis(float AxisValue)
 void ACWarlockChar::Move_YAxis(float AxisValue)
 {
 	if (_acceptsMovementInput) AddMovementInput(FVector(0.0f, AxisValue, 0.0f));
+}
+
+void ACWarlockChar::OnRep_isCasting()
+{
+	if (_isCasting) {
+		_acceptsMovementInput = false;
+	}
+	else {
+		_acceptsMovementInput = true;
+	}
+}
+
+void ACWarlockChar::onCastedSkill(float castTime)
+{
+	_castTime = castTime;
+	_isCasting = true;
+	_acceptsMovementInput = false;
 }
 
 void ACWarlockChar::playTeleportAnimation_Implementation(float time)
@@ -217,11 +249,11 @@ void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
 void  ACWarlockChar::stopMovementFor_Implementation(float seconds) 
 {
 
-	_acceptsMovementInput = false;
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-			this->_acceptsMovementInput = true;
-		}, seconds, false);
+	//_acceptsMovementInput = false;
+	//FTimerHandle handle;
+	//GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+	//		this->_acceptsMovementInput = true;
+	//	}, seconds, false);
 }
 
 void ACWarlockChar::orientDirectionTowards_Implementation(FVector direction, float seconds) 

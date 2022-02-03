@@ -18,6 +18,7 @@ class WARLOCKS_API UCSkillBase : public UActorComponent
 	GENERATED_BODY()
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelChanged, int, oldLevel, int, newLevel);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSkillCast, float);
 
 
 public:
@@ -28,6 +29,8 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void ServerSkillCast(FVector location);
+
+	FOnSkillCast _skillCastDelegate;
 
 	ACWarlockMainPlayerController* getControllerThatPossessThisSkill();
 

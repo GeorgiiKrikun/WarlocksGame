@@ -34,6 +34,8 @@ public:
 	FOnDeath onDeathDelegate;
 	FOnRestart onRestartDelegate;
 
+
+
 	void Restart() override;
 
 	bool Dead() const { return _isDead; }
@@ -46,6 +48,21 @@ public:
 	void Move_XAxis(float AxisValue);
 
 	void Move_YAxis(float AxisValue);
+
+
+	// Cast time stuff
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _castTime = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_isCasting)
+	bool _isCasting = false;
+
+	UFUNCTION()
+	void OnRep_isCasting();
+
+	UFUNCTION()
+	void onCastedSkill(float castTime);
+
 
 protected:
 	// Called when the game starts

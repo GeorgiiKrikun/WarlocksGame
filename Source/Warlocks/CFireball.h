@@ -21,9 +21,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACFireballActorServer> _fireball;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float _castDelay;
-
 	void ServerSkillCast_Implementation(FVector location) override;
 
 

@@ -25,8 +25,7 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	FVector spawnLocation = warlockLocation + 100.0f * direction;
 	FRotator spawnRotation = direction.ToOrientationRotator();
 
-	warlock->stopMovementFor(_castDelay);
-	warlock->orientDirectionTowards(location - warlock->GetActorLocation(), 1.0f);
+	warlock->orientDirectionTowards((location - warlock->GetActorLocation()), 1.0f);
 	warlock->playFireballAnimation();
 
 	FTimerHandle handle;
@@ -35,5 +34,5 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 		auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
 		projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
 		spawnedFireball->SetSkillThatSpawnedThatActor(this);
-		}, _castDelay, false);
+		}, _castTime, false);
 }

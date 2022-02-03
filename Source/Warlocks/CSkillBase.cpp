@@ -106,6 +106,7 @@ void UCSkillBase::BeginPlay()
 void UCSkillBase::startCastTime()
 {
 	_currentCastTime = _castTime;
+	_skillCastDelegate.Broadcast(_castTime);
 }
 
 // Called every frame
