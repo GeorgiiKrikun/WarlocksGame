@@ -28,6 +28,11 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void ServerSkillCast(FVector location);
 
+	FVector _savedLocation
+
+	UFUNCTION(Server,Reliable)
+	virtual void ServerAfterSkillCasted(FVector location);
+
 	ACWarlockMainPlayerController* getControllerThatPossessThisSkill();
 
 
@@ -57,6 +62,7 @@ public:
 	virtual FText GetSkillDescription() const;
 	float CurrentCastTime() const { return _currentCastTime; }
 	float CastTime() const { return _castTime; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

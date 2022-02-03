@@ -11,13 +11,8 @@ int UCFireball::getRequiredInputType()
 	return 1;
 }
 
-void UCFireball::ServerSkillCast_Implementation(FVector location)
+void UCFireball::ServerAfterSkillCasted_Implementation(FVector location)
 {
-	if (_currentCooldown > 0.0f) return;
-	startCastTime();
-
-	_currentCooldown = _cooldown;
-
 	auto warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	FVector warlockLocation = warlock->GetActorLocation();
@@ -25,14 +20,26 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	FVector spawnLocation = warlockLocation + 100.0f * direction;
 	FRotator spawnRotation = direction.ToOrientationRotator();
 
+	ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation));
+	auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
+	projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
+	spawnedFireball->SetSkillThatSpawnedThatActor(this);
+
+}
+
+void UCFireball::ServerSkillCast_Implementation(FVector location)
+{
+	Super::ServerSkillCast_Implementation(location);
+	if (_currentCooldown > 0.0f) return;
+	_currentCooldown = _cooldown;
+
+	startCastTime();
+
+	auto warlock = Cast<ACWarlockChar>(GetOwner());
+	if (!warlock) return;
 	warlock->orientDirectionTowards((location - warlock->GetActorLocation()), 1.0f);
 	warlock->playFireballAnimation();
 
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this, spawnLocation, spawnRotation]() {
-		ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation));
-		auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
-		projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
-		spawnedFireball->SetSkillThatSpawnedThatActor(this);
-		}, CastTime(), false);
+
+
 }

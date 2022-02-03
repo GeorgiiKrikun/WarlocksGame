@@ -23,7 +23,11 @@ public:
 
 	void ServerSkillCast_Implementation(FVector location) override;
 
+	void ServerAfterSkillCasted_Implementation(FVector location) override;
+
 
 	int getRequiredInputType() override;
+
+
 
 };

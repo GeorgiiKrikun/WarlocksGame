@@ -37,7 +37,12 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 void UCSkillBase::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
 {
-	
+	_savedLocation = location;
+}
+
+void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
+{
+
 }
 
 ACWarlockMainPlayerController* UCSkillBase::getControllerThatPossessThisSkill()
@@ -114,5 +119,8 @@ void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (_currentCooldown > 0.0f) _currentCooldown -= DeltaTime;
-	if (CurrentCastTime() > 0.0f) _currentCastTime = CurrentCastTime() - DeltaTime;
+	if (CurrentCastTime() > 0.0f) {
+		_currentCastTime = CurrentCastTime() - DeltaTime;
+		if (CurrentCastTime() <= 0.0f && GetOwner()->HasAuthority()) ServerAfterSkillCasted(_savedLocation);
+	}
 }
