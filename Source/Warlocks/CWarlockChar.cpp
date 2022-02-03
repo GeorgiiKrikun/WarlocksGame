@@ -245,6 +245,8 @@ void  ACWarlockChar::stopMovementFor_Implementation(float seconds)
 void ACWarlockChar::orientDirectionTowards_Implementation(FVector direction, float seconds) 
 {
 	FRotator rot = direction.ToOrientationRotator();
+	rot.Pitch = 0.0f;
+	rot.Roll = 0.0f;
 	this->SetActorRotation(rot, ETeleportType::None);
 	GL("Rotator = %s", *rot.ToString());
 
