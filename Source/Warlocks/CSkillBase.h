@@ -33,6 +33,10 @@ public:
 	UFUNCTION(Server,Reliable)
 	virtual void ServerAfterSkillCasted(FVector location);
 
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void AnimationSkillCast();
+
 	ACWarlockMainPlayerController* getControllerThatPossessThisSkill();
 
 

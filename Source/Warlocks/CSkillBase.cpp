@@ -45,6 +45,11 @@ void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
 
 }
 
+void UCSkillBase::AnimationSkillCast_Implementation()
+{
+
+}
+
 ACWarlockMainPlayerController* UCSkillBase::getControllerThatPossessThisSkill()
 {
 	APawn* owner = Cast<APawn>(this->GetOwner());
