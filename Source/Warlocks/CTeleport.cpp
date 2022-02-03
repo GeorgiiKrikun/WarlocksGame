@@ -5,9 +5,7 @@
 #include "CWarlockChar.h"
 #include "GoglikeLogging.h"
 
-UCTeleport::UCTeleport() : UCSkillBase(),
-	_delayBefore(0.5f),
-	_delayAfter(0.5f)
+UCTeleport::UCTeleport() : UCSkillBase()
 {
 
 }
@@ -42,19 +40,20 @@ void UCTeleport::AfterCast_Implementation()
 
 }
 
+void UCTeleport::ServerAfterSkillCasted_Implementation(FVector location)
+{
+	auto warlock = Cast<ACWarlockChar>(GetOwner());
+	FVector newLocation = location + FVector(0.0f, 0.0f, _addZ);
+	warlock->TeleportTo(newLocation, warlock->GetActorRotation(), false, true);
+	callClientAfterCast();
+}
+
 void UCTeleport::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
 {
 	if (_currentCooldown > 0.0f) return;
 	_currentCooldown = _cooldown;
-	GL("cooldowns %f %f", _currentCooldown, _cooldown);
-
+	startCastTime();
+	Super::ServerSkillCast_Implementation(location);
+	
 	callClientBeforeCast(location);
-
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this, location]() {
-		auto warlock = Cast<ACWarlockChar>(GetOwner());
-		FVector newLocation = location + FVector(0.0f, 0.0f, _addZ);
-		warlock->TeleportTo(newLocation, warlock->GetActorRotation(), false, true);
-		callClientAfterCast();
-	}, _delayBefore, false);
 }

@@ -28,14 +28,9 @@ public:
 
 	void ServerSkillCast_Implementation(FVector location = FVector()) override;
 
+	void ServerAfterSkillCasted_Implementation(FVector location) override;
 
 	int getRequiredInputType() override;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float _delayBefore;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float _delayAfter;
 
 
 	UFUNCTION(Client, Reliable)
@@ -50,5 +45,4 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void AfterCast();
-
 };
