@@ -17,18 +17,12 @@ class WARLOCKS_API USacrificeBase : public UCSkillBase
 public:
 	USacrificeBase();
 
-	UFUNCTION(Client, Reliable)
-	void callClientStopMovement();
-
-	UFUNCTION(BlueprintNativeEvent)
-	void stopMovement();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float _castDelay;
-
 	void ServerSkillCast_Implementation(FVector location) override;
 
 
 	int getRequiredInputType() override;
+
+
+	void ServerAfterSkillCasted_Implementation(FVector location) override;
 
 };

@@ -7,25 +7,9 @@
 #include "CWarlockMainPlayerController.h"
 
 // Sets default values for this component's properties
-USacrificeBase::USacrificeBase() : _castDelay(1.0f)
+USacrificeBase::USacrificeBase()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	//SetIsReplicated(true);
-
-}
-
-void USacrificeBase::callClientStopMovement_Implementation()
-{
-	stopMovement();
-}
-
-
-
-void USacrificeBase::stopMovement_Implementation()
-{
-
 }
 
 int USacrificeBase::getRequiredInputType()
@@ -33,22 +17,21 @@ int USacrificeBase::getRequiredInputType()
 	return 0;
 }
 
+void USacrificeBase::ServerAfterSkillCasted_Implementation(FVector location)
+{
+	ACharacter* warlock = Cast<ACharacter>(GetOwner());
+	location = warlock->GetActorLocation();
+	AController* controller = warlock->GetController();
+	TArray<AActor*> ingnoredActors;
+	ingnoredActors.Add(GetOwner());
+	UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors, GetOwner(), getControllerThatPossessThisSkill());
+}
+
 void USacrificeBase::ServerSkillCast_Implementation(FVector location)
 {
 	if (_currentCooldown > 0.0f) return;
+	_currentCooldown = _cooldown;
+	Super::ServerSkillCast_Implementation(location);
 	startCastTime();
 
-	_currentCooldown = _cooldown;
-	ACharacter* casted = Cast<ACharacter>(GetOwner());
-	location = casted->GetActorLocation();
-	AController* controller = casted->GetController();
-
-	callClientStopMovement();
-
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this, location, controller]() {
-		TArray<AActor*> ingnoredActors;
-		ingnoredActors.Add(GetOwner());
-		UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors, GetOwner(), getControllerThatPossessThisSkill());
-		}, _castDelay, false);
 }

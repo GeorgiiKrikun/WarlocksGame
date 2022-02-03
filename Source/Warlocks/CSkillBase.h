@@ -28,7 +28,7 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void ServerSkillCast(FVector location);
 
-	FVector _savedLocation
+	FVector _savedLocation;
 
 	UFUNCTION(Server,Reliable)
 	virtual void ServerAfterSkillCasted(FVector location);
