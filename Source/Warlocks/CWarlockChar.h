@@ -114,11 +114,11 @@ public:
 
 	// TELEPORT STUFF
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void playTeleportAnimation(float time);
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	UParticleSystemComponent* _teleportAnimation;
+	//UFUNCTION(Server, Reliable, BlueprintCallable)
+	//void playTeleportAnimation(float time);
+	//
+	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	//UParticleSystemComponent* _teleportAnimation;
 
 	//SACRRIFICE
 	UFUNCTION(Server,Reliable, BlueprintCallable)

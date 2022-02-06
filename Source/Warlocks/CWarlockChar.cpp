@@ -23,7 +23,7 @@ ACWarlockChar::ACWarlockChar() : ACharacter()
 	_HealthPoints = 100.0f;
 	_MaxHealthPoints = 100.0f;
 
-	_teleportAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TeleportAnimation"));
+	//_teleportAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TeleportAnimation"));
 	_sacrificeAnimation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SacrificeAnimation"));
 
 	_invulnerable = false;
@@ -57,7 +57,7 @@ float ACWarlockChar::MaxHealthPoints() const
 void ACWarlockChar::BeginPlay()
 {
 	Super::BeginPlay();
-	_teleportAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//_teleportAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	_sacrificeAnimation->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TArray<UCSkillBase*> skillComponents;
 	this->GetComponents<UCSkillBase>(skillComponents);
@@ -204,15 +204,15 @@ UCSkillBase* ACWarlockChar::getSkillBeingCasted()
 	return _skillBeingCasted;
 }
 
-void ACWarlockChar::playTeleportAnimation_Implementation(float time)
-{
-	GL("playTeleportAnimation_Implementation");
-	_teleportAnimation->SetVisibility(true);
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-		_teleportAnimation->SetVisibility(false);
-		}, time, false);
-}
+//void ACWarlockChar::playTeleportAnimation_Implementation(float time)
+//{
+//	GL("playTeleportAnimation_Implementation");
+//	_teleportAnimation->SetVisibility(true);
+//	FTimerHandle handle;
+//	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+//		_teleportAnimation->SetVisibility(false);
+//		}, time, false);
+//}
 
 void ACWarlockChar::startPlaySacrificeAnimation_Implementation()
 {
