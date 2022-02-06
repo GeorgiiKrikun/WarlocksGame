@@ -18,6 +18,6 @@ public:
 	void ServerSkillCast_Implementation(FVector location) override;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float _duration;
+	void ServerAfterSkillCasted_Implementation(FVector location) override;
+
 };

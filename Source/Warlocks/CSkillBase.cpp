@@ -48,6 +48,7 @@ void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
 
 void UCSkillBase::BroadcastAnimationSkillCast_Implementation()
 {
+	GL("BroadcastAnumationskillcast")
 	AnimationSkillCast();
 }
 

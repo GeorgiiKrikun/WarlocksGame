@@ -163,7 +163,7 @@ public:
 	public:
 
 	UFUNCTION(Server, Reliable)
-	void setInvulnerable(float duration);
+	void setInvulnerable(bool invulnerable);
 
 	bool GetInvulnerable();
 };

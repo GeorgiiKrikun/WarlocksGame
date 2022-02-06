@@ -216,23 +216,24 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 
 FString FDamageStatistics::pop()
 {
-	FString res = "Statistics:\n\n";
-	for (const TPair<APlayerController*, float>& pair : _damageDoneMap)
-	{
-		res += "ID: ";
-		res.AppendInt(pair.Key->PlayerState->GetPlayerId());
+	//FString res = "Statistics:\n\n";
+	//for (const TPair<APlayerController*, float>& pair : _damageDoneMap)
+	//{
+	//	res += "ID: ";
+	//	res.AppendInt(pair.Key->PlayerState->GetPlayerId());
 
-		//res += " NAME: ";
-		//res += pair.Key->PlayerState->GetPlayerName();
-		res += " DAMAGE DONE: ";
-		res.AppendInt(int( pair.Value));
-		res += " Coins: ";
-		res.AppendInt(pair.Key->GetPlayerState<ACPlayerState>()->Coins());
-		res += "\n";
+	//	//res += " NAME: ";
+	//	//res += pair.Key->PlayerState->GetPlayerName();
+	//	res += " DAMAGE DONE: ";
+	//	res.AppendInt(int( pair.Value));
+	//	res += " Coins: ";
+	//	res.AppendInt(pair.Key->GetPlayerState<ACPlayerState>()->Coins());
+	//	res += "\n";
 
-		_damageDoneMap[pair.Key] = 0.0f;
-	}
+	//	_damageDoneMap[pair.Key] = 0.0f;
+	//}
 
-	return res;
+	//return res;
+	return FString();
 
 }

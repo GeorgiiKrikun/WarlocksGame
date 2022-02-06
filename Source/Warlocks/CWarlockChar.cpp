@@ -263,16 +263,10 @@ void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 
 }
 
-void ACWarlockChar::setInvulnerable_Implementation(float duration)
+void ACWarlockChar::setInvulnerable_Implementation(bool invulnerable)
 {
-	_invulnerable = true;
+	_invulnerable = invulnerable;
 
-	GW("CHARACTER IS INVP");
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-		this->_invulnerable = false;
-		GW("!CHARACTER IS INVP");
-	}, duration, false);
 }
 
 bool ACWarlockChar::GetInvulnerable()
