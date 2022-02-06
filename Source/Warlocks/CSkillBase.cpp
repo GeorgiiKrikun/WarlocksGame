@@ -38,11 +38,17 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 void UCSkillBase::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
 {
 	_savedLocation = location;
+	BroadcastAnimationSkillCast();
 }
 
 void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
 {
 
+}
+
+void UCSkillBase::BroadcastAnimationSkillCast_Implementation()
+{
+	AnimationSkillCast();
 }
 
 void UCSkillBase::AnimationSkillCast_Implementation()
