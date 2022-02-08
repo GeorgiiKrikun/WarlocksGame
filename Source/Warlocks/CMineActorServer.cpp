@@ -8,18 +8,38 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GoglikeLogging.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "CWarlockChar.h"
 
 // Sets default values
 ACMineActorServer::ACMineActorServer() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	if (!_collisionSphere) {
-		_collisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphereomponent"));
-		this->SetRootComponent(_collisionSphere);
-		_collisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
-		_collisionSphere->SetVisibility(true);
-		_collisionSphere->bHiddenInGame = false;
+	if (!_collisionSpherePull) {
+		_collisionSpherePull = CreateDefaultSubobject<USphereComponent>(TEXT("Sphereomponent"));
+		this->SetRootComponent(_collisionSpherePull);
+		_collisionSpherePull->SetCollisionResponseToAllChannels(ECR_Overlap);
+		_collisionSpherePull->SetVisibility(true);
+		_collisionSpherePull->bHiddenInGame = false;
+	}
+
+	if (!_collisionSphereSilence) {
+		_collisionSphereSilence = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponentSilence"));
+		/*this->SetRootComponent(_collisionSphereSilence);*/
+		_collisionSphereSilence->SetCollisionResponseToAllChannels(ECR_Overlap);
+		_collisionSphereSilence->SetVisibility(true);
+		_collisionSphereSilence->bHiddenInGame = false;
+	}
+
+	if (!_movement)
+	{
+		// Use this component to drive this projectile's movement.
+		_movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+		_movement->SetUpdatedComponent(this->GetRootComponent());
+		_movement->MaxSpeed = 300.0f;
+		_movement->ProjectileGravityScale = 0.0f;
+		_movement->SetIsReplicated(true);
 	}
 
 	SetReplicates(true);
@@ -31,14 +51,6 @@ ACMineActorServer::ACMineActorServer() : Super()
 void ACMineActorServer::BeginPlay()
 {
 	Super::BeginPlay();
-	//if (_collisionSphere) {
-	//	_collisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ACMineActorServer::whenOverlapped);
-	//	_collisionSphere->OnComponentEndOverlap.AddDynamic(this, &ACMineActorServer::whenNotOverlapped);
-	//}
-
-	if (HasAuthority()) GL("ServerBP");
-	if (!HasAuthority()) GL("ClientBP");
-
 	_currentSuckTime = _suckTime;
 
 }
@@ -56,22 +68,34 @@ void ACMineActorServer::Tick(float DeltaTime)
 
 
 		TArray<AActor*> overlappingActors;
-		_collisionSphere->GetOverlappingActors(overlappingActors);
+		_collisionSpherePull->GetOverlappingActors(overlappingActors);
 
 		for (AActor* actor : overlappingActors) {
 			ACharacter* character = Cast<ACharacter>(actor);
 			if (!character) continue;
 			FVector direction = GetActorLocation() - actor->GetActorLocation();
+			float distance = direction.Size();
+			float forceFactor = (_collisionSpherePull->GetScaledSphereRadius() - distance) /(_collisionSpherePull->GetScaledSphereRadius());
+			forceFactor = 0.75f + forceFactor / 2.0f;
+
 			direction = direction.GetSafeNormal2D();
 			direction = direction * _force;
-			character->GetCharacterMovement()->AddForce(direction);
-			GL("Force applied = %f, %f", direction.X, direction.Y);
+			character->GetCharacterMovement()->AddForce(direction*forceFactor);
+			GL("Force applied = %f, %f, %f", direction.X, direction.Y, forceFactor);
 		}	
 
+		overlappingActors.Empty();
+
+		_collisionSpherePull->GetOverlappingActors(overlappingActors);
+
+		for (AActor* actor : overlappingActors) {
+			ACWarlockChar* character = Cast<ACWarlockChar>(actor);
+			if (!character) continue;
+			character->Silence(2.0f);
+		}
+
 		if (_currentSuckTime <= 0.0f) {
-			//if (!_skillThatSpawnedThatActor) return;
 			Destroy();
-			//_skillThatSpawnedThatActor->DestroyAllMines(_correspondingNumberOfThisActor);
 		}
 	}
 
@@ -79,19 +103,8 @@ void ACMineActorServer::Tick(float DeltaTime)
 
 }
 
-void ACMineActorServer::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+UMovementComponent* ACMineActorServer::ProjectileMovement() const
 {
-
-
+	return _movement;
 }
-
-void ACMineActorServer::whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-
-}
-
-//void ACMineActorServer::SetCorrespondingNumberOfThisActor(int32 num)
-//{
-//	_correspondingNumberOfThisActor = num;
-//}
 

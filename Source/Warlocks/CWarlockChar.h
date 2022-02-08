@@ -130,6 +130,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ClientImplementationOfSacrificeAnimation();
 
+	void Silence(float duration);
+
 
 	//Fireball
 

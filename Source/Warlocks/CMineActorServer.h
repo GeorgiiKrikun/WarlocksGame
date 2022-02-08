@@ -9,6 +9,7 @@
 
 class USphereComponent;
 class UCMine;
+class UProjectileMovementComponent;
 
 UCLASS()
 class WARLOCKS_API ACMineActorServer : public AActorSpawnedBySkill
@@ -27,24 +28,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
-	void whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void whenNotOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool _visibleOnThisInstance = false;
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void armVisibilityTimer();
-
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	USphereComponent* _collisionSphere = nullptr;
+	USphereComponent* _collisionSpherePull = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	USphereComponent* _collisionSphereSilence = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UProjectileMovementComponent* _movement;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float _damage = 20.0f;
+	float _damage = 00.0f;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _suckTime = 5.0f;
@@ -59,4 +54,6 @@ protected:
 
 	TArray<AActor*> _actorsCaught;
 
+public:
+	UMovementComponent* ProjectileMovement() const override;
 };

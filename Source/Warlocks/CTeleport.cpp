@@ -50,8 +50,8 @@ void UCTeleport::ServerAfterSkillCasted_Implementation(FVector location)
 
 void UCTeleport::ServerSkillCast_Implementation(FVector location /*= FVector()*/)
 {
-	if (_currentCooldown > 0.0f) return;
-	_currentCooldown = _cooldown;
+	if (CurrentCooldown() > 0.0f) return;
+	SetCurrentCooldown(_cooldown);
 	startCastTime();
 	Super::ServerSkillCast_Implementation(location);
 	

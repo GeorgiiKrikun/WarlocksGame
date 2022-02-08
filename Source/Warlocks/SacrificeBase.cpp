@@ -29,8 +29,8 @@ void USacrificeBase::ServerAfterSkillCasted_Implementation(FVector location)
 
 void USacrificeBase::ServerSkillCast_Implementation(FVector location)
 {
-	if (_currentCooldown > 0.0f) return;
-	_currentCooldown = _cooldown;
+	if (CurrentCooldown() > 0.0f) return;
+	SetCurrentCooldown(_cooldown);
 	Super::ServerSkillCast_Implementation(location);
 	startCastTime();
 

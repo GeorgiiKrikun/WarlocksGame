@@ -130,7 +130,7 @@ void UCSkillBase::startCastTime_Implementation()
 void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (_currentCooldown > 0.0f) _currentCooldown -= DeltaTime;
+	if (CurrentCooldown() > 0.0f) SetCurrentCooldown(CurrentCooldown() - DeltaTime);
 	if (CurrentCastTime() > 0.0f) {
 		_currentCastTime = CurrentCastTime() - DeltaTime;
 		if (CurrentCastTime() <= 0.0f && GetOwner()->HasAuthority()) ServerAfterSkillCasted(_savedLocation);

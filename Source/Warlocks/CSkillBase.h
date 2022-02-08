@@ -69,6 +69,8 @@ public:
 	float CurrentCastTime() const { return _currentCastTime; }
 	float CastTime() const { return _castTime; }
 
+	float CurrentCooldown() const { return _currentCooldown; }
+	void SetCurrentCooldown(float val) { _currentCooldown = val; }
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

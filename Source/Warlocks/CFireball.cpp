@@ -30,8 +30,8 @@ void UCFireball::ServerAfterSkillCasted_Implementation(FVector location)
 void UCFireball::ServerSkillCast_Implementation(FVector location)
 {
 	Super::ServerSkillCast_Implementation(location);
-	if (_currentCooldown > 0.0f) return;
-	_currentCooldown = _cooldown;
+	if (CurrentCooldown() > 0.0f) return;
+	SetCurrentCooldown(_cooldown);
 
 	startCastTime();
 

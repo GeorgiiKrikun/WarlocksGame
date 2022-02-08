@@ -232,6 +232,19 @@ void ACWarlockChar::ClientImplementationOfSacrificeAnimation_Implementation()
 
 
 
+void ACWarlockChar::Silence(float duration)
+{
+	TArray<UCSkillBase*> skillComponents;
+	this->GetComponents<UCSkillBase>(skillComponents);
+
+	for (int i = 0; i < skillComponents.Num(); ++i) {
+		float currentCooldown = skillComponents[i]->CurrentCooldown();
+		if (currentCooldown < duration) {
+			skillComponents[i]->SetCurrentCooldown(duration);
+		}
+	}
+}
+
 void  ACWarlockChar::stopMovementFor_Implementation(float seconds) 
 {
 
