@@ -32,4 +32,7 @@ public:
 
 	int getRequiredInputType() override;
 
+
+	void ServerAfterSkillCasted_Implementation(FVector location) override;
+
 };

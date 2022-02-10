@@ -38,8 +38,5 @@ void UCFireball::ServerSkillCast_Implementation(FVector location)
 	auto warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	warlock->orientDirectionTowards((location - warlock->GetActorLocation()), 1.0f);
-	warlock->playFireballAnimation();
-
-
 
 }
