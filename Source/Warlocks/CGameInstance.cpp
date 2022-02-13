@@ -8,7 +8,7 @@
 
 void UCGameInstance::Init()
 {
-	if (IOnlineSubsystem* SubSystem = IOnlineSubsystem::Get("Steam")) {
+	if (IOnlineSubsystem* SubSystem = IOnlineSubsystem::Get("Null")) {
 		GL("SUBSYSTEM = %s", *SubSystem->GetOnlineServiceName().ToString());
 		_SessionInterface = SubSystem->GetSessionInterface();
 		if (_SessionInterface.IsValid()) {
@@ -64,7 +64,7 @@ void UCGameInstance::CreateServer()
 
 	settings.bAllowJoinInProgress = true;
 	settings.bIsDedicated = false;
-	settings.bIsLANMatch = false;
+	settings.bIsLANMatch = true;
 	settings.bShouldAdvertise = true;
 	settings.bUsesPresence = true;
 	settings.NumPublicConnections = 5;
@@ -80,7 +80,7 @@ void UCGameInstance::JoinServer(APlayerController* controller)
 	_playerControllerThatUsedSearch = controller;
 
 	_SessionSearch = MakeShareable(new FOnlineSessionSearch());
-	_SessionSearch->bIsLanQuery = false;
+	_SessionSearch->bIsLanQuery = true;
 	_SessionSearch->MaxSearchResults = 10000;
 	_SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	
