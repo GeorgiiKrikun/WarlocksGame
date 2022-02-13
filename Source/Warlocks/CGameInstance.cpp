@@ -37,15 +37,13 @@ void UCGameInstance::OnFindSessionComplete(bool Succeded)
 		GL("Joining found server");
 		_SessionInterface->JoinSession(0, FName(TEXT("Session")), searchResults[0]);
 	}
-	
-	
 }
 
 void UCGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	GL("Join Session Complete, joining game");	
-	if (_playerControllerThatUsedSearch) {	
-		GL("Player controller exits");	
+	if (_playerControllerThatUsedSearch) {
+		GL("Player controller exits");
 
 		FString JoinAdress = "";
 		_SessionInterface->GetResolvedConnectString(SessionName, JoinAdress);
