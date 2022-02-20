@@ -14,6 +14,37 @@ void ACWarlocksGameMode::StartPlay() {
 	Super::StartPlay();
 }
 
+void ACWarlocksGameMode::addBot()
+{
+	/*if (_botControllerClass) {
+		GE("No bot controller class to spawn, aborting");
+		return;
+	} 
+	if (!_actualClassToSpawn) {
+		GE("No character class to spawn, aborting");
+		return;
+	}*/
+	
+	FVector spawnLocation;
+	FRotator spawnRotation;
+	ACWarlockChar* spawnedChar = Cast<ACWarlockChar>(GetWorld()->SpawnActor(_actualClassToSpawn, &spawnLocation, &spawnRotation));
+	ACAIController* spawnedController = Cast<ACAIController>(GetWorld()->SpawnActor(_botControllerClass, &spawnLocation, &spawnRotation));
+	
+	if (!spawnedChar) {
+		GE("Could not spawn char");
+		return;
+	}
+	if (!spawnedController) {
+		GE("Could not spawn controller");
+		return;
+	}
+
+	spawnedController->Possess(spawnedChar);
+
+
+
+}
+
 void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage)
 {
 	GW("ADD DAMAGE STATISTICS ENTRY %d, %f", from, damage);
@@ -66,6 +97,13 @@ void ACWarlocksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	_currentTreshold = _beginThreshold;
+
+}
+
+ACWarlocksGameMode::ACWarlocksGameMode() :
+	_actualClassToSpawn(ACWarlockChar::StaticClass()),
+	_botControllerClass(ACAIController::StaticClass())
+{
 
 }
 

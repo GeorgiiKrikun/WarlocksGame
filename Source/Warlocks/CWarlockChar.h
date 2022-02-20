@@ -168,4 +168,6 @@ public:
 	void setInvulnerable(bool invulnerable);
 
 	bool GetInvulnerable();
+
+
 };

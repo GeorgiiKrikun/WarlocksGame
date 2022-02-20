@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "Templates/SubclassOf.h"
+#include "CAIController.h"
+#include "CWarlockChar.h"
 #include "CWarlocksGameMode.generated.h"
 
 class ACWarlockMainPlayerController;
@@ -26,6 +29,9 @@ UCLASS()
 class WARLOCKS_API ACWarlocksGameMode : public AGameMode
 {
 	GENERATED_BODY()
+
+public:
+	ACWarlocksGameMode();
 
 	void PostLogin(APlayerController* NewPlayer) override;
 	
@@ -74,11 +80,21 @@ public:
 	float _respawnDelay = 1.0f;
 
 
+	UFUNCTION(BlueprintCallable, Exec)
+	void addBot();
 
+	// Bot controller class
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<ACAIController> _botControllerClass;
+
+	// Character Class for bot
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<ACWarlockChar> _actualClassToSpawn;
 
 	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);
 
 	void Tick(float DeltaSeconds) override;
+
 
 
 private:
