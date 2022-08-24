@@ -106,10 +106,6 @@ protected:
 	TArray<int> _costToLevelUpAtLevel;
 
 
-
-
-
-
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -121,6 +117,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FText _skillDescription;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool _isSelectedToCast = false;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	    bool _isSkillSelectedInSkillList = false;

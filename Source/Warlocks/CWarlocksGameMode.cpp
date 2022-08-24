@@ -41,8 +41,6 @@ void ACWarlocksGameMode::addBot()
 
 	spawnedController->Possess(spawnedChar);
 
-
-
 }
 
 void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage)
