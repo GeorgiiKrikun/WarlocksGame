@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS()
 class WARLOCKS_API ACGameStateBase : public AGameState
 {
@@ -21,6 +22,7 @@ public:
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	float _thresholdValue;
+
 
 	
 };

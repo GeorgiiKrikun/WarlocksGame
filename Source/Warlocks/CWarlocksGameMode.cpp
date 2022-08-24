@@ -43,7 +43,7 @@ void ACWarlocksGameMode::addBot()
 
 }
 
-void ACWarlocksGameMode::addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage)
+void ACWarlocksGameMode::addDamageStatisticsEntry(AController* from, float damage)
 {
 	GW("ADD DAMAGE STATISTICS ENTRY %d, %f", from, damage);
 	if (!_damageStatistics._damageDoneMap.Contains(from)) {
@@ -209,7 +209,7 @@ void ACWarlocksGameMode::ReactOnExitInterlude()
 
 void ACWarlocksGameMode::AwardCoinsAccordingToStats()
 {
-	for (const TPair<APlayerController*, float>& pair : _damageStatistics._damageDoneMap)
+	for (const TPair<AController*, float>& pair : _damageStatistics._damageDoneMap)
 	{
 		ACPlayerState* playerState = pair.Key->GetPlayerState<ACPlayerState>();
 		if (!playerState) continue;
@@ -248,6 +248,12 @@ void ACWarlocksGameMode::RespawnPlayer(ACWarlockMainPlayerController* controller
 		}
 
 	}, _respawnDelay, false);
+}
+
+bool ACWarlocksGameMode::AreWeInMatch()
+{
+	
+	return (_currentLengthOfInterlude <= 0.0f);
 }
 
 FString FDamageStatistics::pop()

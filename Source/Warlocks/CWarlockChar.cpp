@@ -83,20 +83,34 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		FVector finalImpulse = -directionNormalized * 100000.0f;
 		GetCharacterMovement()->AddImpulse(finalImpulse, false);
 
-		ACWarlockMainPlayerController* wc = Cast<ACWarlockMainPlayerController>(EventInstigator);
+		AController* wc = EventInstigator;
+		if (!wc) wc = _previousDamageInstigator;
 		ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		AController* thisController = GetController();
+		if (!thisController) {
+			GW("No controller while taking damage");
+			return 0.0f;
+		}
+		ACPlayerState* playerState = thisController->GetPlayerState<ACPlayerState>();
+		ACPlayerState* instigatorPlayerState = nullptr;
+		if (wc) instigatorPlayerState = wc->GetPlayerState<ACPlayerState>();
 
+		// coin awards stuff
 		if (wc) {
 			gameMode->addDamageStatisticsEntry(wc, Damage);
 			_previousDamageInstigator = wc;
 		}
-		else if (_previousDamageInstigator) {
-			gameMode->addDamageStatisticsEntry(_previousDamageInstigator, Damage);
-		}
 
+		// player state change stuff
 		if (_HealthPoints <= 0.0f) {
+			if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
+			if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
 			onDeathDelegate.Broadcast();
 		}
+
+		if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDamageReceived(playerState->DamageReceived() + Damage);
+		if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetDamageDone(instigatorPlayerState->DamageDone() + Damage);
+
 
 		return Damage;
 
@@ -113,20 +127,34 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 	Super::InternalTakePointDamage(Damage, PointDamageEvent, EventInstigator, DamageCauser);
 	_HealthPoints = _HealthPoints - Damage;
 
-	ACWarlockMainPlayerController* wc = Cast<ACWarlockMainPlayerController>(EventInstigator);
-	ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
+	AController* wc = EventInstigator;
+	if (!wc) wc = _previousDamageInstigator;
+	ACWarlocksGameMode* gameMode = Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	AController* thisController = GetController();
+	if (!thisController) {
+		GW("No controller while taking damage");
+		return 0.0f;
+	}
+	ACPlayerState* playerState = thisController->GetPlayerState<ACPlayerState>();
+	ACPlayerState* instigatorPlayerState = nullptr;
+	if (wc) instigatorPlayerState = wc->GetPlayerState<ACPlayerState>();
+
+	// coin awards stuff
 	if (wc) {
 		gameMode->addDamageStatisticsEntry(wc, Damage);
 		_previousDamageInstigator = wc;
 	}
-	else if (_previousDamageInstigator) {
-		gameMode->addDamageStatisticsEntry(_previousDamageInstigator, Damage);
-	}
 
-	if (_HealthPoints < 0.0f) {
+	// player state change stuff
+	if (_HealthPoints <= 0.0f) {
+		if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
+		if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
 		onDeathDelegate.Broadcast();
 	}
+
+	if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDamageReceived(playerState->DamageReceived() + Damage);
+	if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetDamageDone(instigatorPlayerState->DamageDone() + Damage);
 
 	return Damage;
 }

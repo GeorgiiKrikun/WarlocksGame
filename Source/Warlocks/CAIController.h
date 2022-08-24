@@ -14,4 +14,6 @@ class WARLOCKS_API ACAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+	ACAIController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
 };

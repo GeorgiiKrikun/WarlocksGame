@@ -10,4 +10,5 @@ void ACGameStateBase::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACGameStateBase, _thresholdValue);
+	//DOREPLIFETIME(ACGameStateBase, _scoreMap);
 }

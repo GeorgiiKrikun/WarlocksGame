@@ -91,7 +91,7 @@ protected:
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	// To track who dealt damage when there is no correct instigator
-	ACWarlockMainPlayerController* _previousDamageInstigator;
+	AController* _previousDamageInstigator;
 
 
 

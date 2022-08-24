@@ -22,9 +22,9 @@ void USacrificeBase::ServerAfterSkillCasted_Implementation(FVector location)
 	ACharacter* warlock = Cast<ACharacter>(GetOwner());
 	location = warlock->GetActorLocation();
 	AController* controller = warlock->GetController();
-	TArray<AActor*> ingnoredActors;
-	ingnoredActors.Add(GetOwner());
-	UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ingnoredActors, GetOwner(), getControllerThatPossessThisSkill());
+	TArray<AActor*> ignoredActors;
+	ignoredActors.Add(GetOwner());
+	UGameplayStatics::ApplyRadialDamage(GetWorld(), 20.0f, location, 200.0f, 0, ignoredActors, GetOwner(), getControllerThatPossessThisSkill());
 }
 
 void USacrificeBase::ServerSkillCast_Implementation(FVector location)

@@ -31,13 +31,50 @@ public:
 
 	void SetCoins(int val);
 
+	UFUNCTION(BlueprintCallable)
+		float DamageDone() const;
+	
+	UFUNCTION(BlueprintCallable)
+		void SetDamageDone(float val);
+
+	UFUNCTION(BlueprintCallable)
+		float DamageReceived() const;
+	
+	UFUNCTION(BlueprintCallable)
+		void SetDamageReceived(float val);
+
+	UFUNCTION(BlueprintCallable)
+		int Kills() const;
+	
+	UFUNCTION(BlueprintCallable)
+		void SetKills(int val);
+
+	UFUNCTION(BlueprintCallable)
+		int Deaths() const;
+	
+	UFUNCTION(BlueprintCallable)
+		void SetDeaths(int val);
+
 protected:
-	//properites
+	//properties
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	bool _isDead = false;
 	
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _coins = 0;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _damageDone = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _damageReceived = 0.0f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	int _kills = 0;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	int _deaths = 0;
+
 
 
 };

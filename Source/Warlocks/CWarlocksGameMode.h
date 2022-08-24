@@ -19,7 +19,7 @@ USTRUCT() struct FDamageStatistics {
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TMap<APlayerController*, float> _damageDoneMap;
+	TMap<AController*, float> _damageDoneMap;
 
 	FString pop();
 
@@ -51,6 +51,8 @@ public:
 	int CheckNumberOfPlayersAlive();
 
 	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true, bool atSpecifiedLocation = false, FVector location = FVector(0,0,0), FRotator rotation = FRotator(0,0,0));
+
+	bool AreWeInMatch();
 
 public:
 	void StartPlay() override;
@@ -91,7 +93,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACWarlockChar> _actualClassToSpawn;
 
-	void addDamageStatisticsEntry(ACWarlockMainPlayerController* from, float damage);
+	void addDamageStatisticsEntry(AController* from, float damage);
 
 	void Tick(float DeltaSeconds) override;
 

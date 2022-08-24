@@ -3,3 +3,8 @@
 
 #include "CAIController.h"
 
+ACAIController::ACAIController(const FObjectInitializer& ObjectInitializer) :
+	AAIController(ObjectInitializer)
+{
+	bWantsPlayerState = true;
+}
