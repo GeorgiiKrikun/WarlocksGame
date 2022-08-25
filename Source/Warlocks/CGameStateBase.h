@@ -23,6 +23,9 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	float _thresholdValue;
 
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+		bool _areWeInMatch = true;
+
 
 	
 };

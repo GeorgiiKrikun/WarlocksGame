@@ -51,8 +51,11 @@ public:
 	int CheckNumberOfPlayersAlive();
 
 	void RespawnPlayer(ACWarlockMainPlayerController* controller, bool respawnEvenIfAlive = true, bool atSpecifiedLocation = false, FVector location = FVector(0,0,0), FRotator rotation = FRotator(0,0,0));
-
+	
+	UFUNCTION(BlueprintCallable)
 	bool AreWeInMatch();
+
+	
 
 public:
 	void StartPlay() override;

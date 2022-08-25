@@ -162,6 +162,9 @@ void ACWarlocksGameMode::ReactOnDeathInterlude()
 void ACWarlocksGameMode::ReactOnEnterInterlude()
 {
 
+	ACGameStateBase* gameState = GetGameState<ACGameStateBase>();
+	if (gameState) gameState->_areWeInMatch = false;
+
 	_currentTreshold = _beginThreshold;
 
 	_bRespawnGuard = true;
@@ -191,6 +194,8 @@ void ACWarlocksGameMode::ReactOnExitInterlude()
 {
 	_currentTreshold = _beginThreshold;
 
+	ACGameStateBase* gameState = GetGameState<ACGameStateBase>();
+	if (gameState) gameState->_areWeInMatch = true;
 	
 	if (_bRespawnGuard) return;
 	_bRespawnGuard = true;
