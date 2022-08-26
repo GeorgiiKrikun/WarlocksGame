@@ -59,6 +59,8 @@ void ACFireballActorServer::BeginPlay()
 void ACFireballActorServer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	_surviveTime -= DeltaTime;
+	if (_surviveTime < 0.0f) this->Destroy();
 
 }
 

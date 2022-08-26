@@ -95,14 +95,14 @@ protected:
 	 */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_SkillLevel)
 	int _skillLevel = 0;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _maxSkillLevel = 3;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<FText> _detailedDesctiption;
 
-
-
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Replicated)
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<int> _costToLevelUpAtLevel;
 
 

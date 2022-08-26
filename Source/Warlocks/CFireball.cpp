@@ -22,7 +22,23 @@ void UCFireball::ServerAfterSkillCasted_Implementation(FVector location)
 
 	ACFireballActorServer* spawnedFireball = Cast<ACFireballActorServer>(GetWorld()->SpawnActor(_fireball, &spawnLocation, &spawnRotation));
 	auto projectileMovement = Cast<UProjectileMovementComponent>(spawnedFireball->ProjectileMovement());
-	projectileMovement->SetVelocityInLocalSpace(FVector(1000.0f, 0.0f, 0.0f));
+
+	if (_skillLevel > 1) {
+		spawnedFireball->SetDamage(_damage*_sizeAndDamageUpgradeFactor);
+		spawnedFireball->SetActorRelativeScale3D(FVector(_sizeAndDamageUpgradeFactor, _sizeAndDamageUpgradeFactor, _sizeAndDamageUpgradeFactor));
+	}
+	else {
+		spawnedFireball->SetDamage(_damage);
+	}
+
+	if (_skillLevel > 2) spawnedFireball->SetSurviveTime(_flightTime * _flightTimeUpgradeFactor);
+	else spawnedFireball->SetSurviveTime(_flightTime);
+
+	if (_skillLevel > 3) projectileMovement->SetVelocityInLocalSpace(FVector(_velocity * _velocityUpgradeFactor, 0.0f, 0.0f));
+	else projectileMovement->SetVelocityInLocalSpace(FVector(_velocity, 0.0f, 0.0f));
+
+
+
 	spawnedFireball->SetSkillThatSpawnedThatActor(this);
 
 }

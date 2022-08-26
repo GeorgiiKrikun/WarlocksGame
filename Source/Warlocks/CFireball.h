@@ -29,5 +29,23 @@ public:
 	int getRequiredInputType() override;
 
 
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _velocity = 1000.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _velocityUpgradeFactor = 2.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _flightTime = 5.0f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _flightTimeUpgradeFactor = 2.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _damage = 10.0f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _sizeAndDamageUpgradeFactor = 1.5f;
 
 };

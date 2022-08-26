@@ -31,7 +31,6 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(UCSkillBase, _maxSkillLevel);
 	DOREPLIFETIME(UCSkillBase, _cooldown);
 	DOREPLIFETIME(UCSkillBase, _currentCooldown);
-	DOREPLIFETIME(UCSkillBase, _costToLevelUpAtLevel);
 }
 
 

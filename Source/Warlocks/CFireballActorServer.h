@@ -42,7 +42,14 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USphereComponent* _collisionSphere;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float _damage = 20.0f;
+	float _damage = 10.0f;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float _surviveTime = 10.0f;
+
+public:
+	void SetDamage(float val) { _damage = val; }
+	void SetSurviveTime(float val) { _surviveTime = val; }
 };
