@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Engine/EngineTypes.h"
+#include "CDiamondActor.h"
+
 #include "CWarlockChar.generated.h"
 
 class UParticleSystemComponent;
@@ -161,6 +163,10 @@ public:
 	bool _invulnerable;
 
 	bool _acceptsMovementInput=true;
+
+	//Diamonds stuff
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<ACDiamondActor> _diamondClass;
 
 	public:
 

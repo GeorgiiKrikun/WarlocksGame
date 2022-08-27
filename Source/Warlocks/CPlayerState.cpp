@@ -9,6 +9,7 @@ void ACPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACPlayerState, _isDead);
 	DOREPLIFETIME(ACPlayerState, _coins);
+	DOREPLIFETIME(ACPlayerState, _diamonds);
 	DOREPLIFETIME(ACPlayerState, _damageDone);
 	DOREPLIFETIME(ACPlayerState, _damageReceived);
 	DOREPLIFETIME(ACPlayerState, _deaths);
@@ -22,7 +23,6 @@ void ACPlayerState::setDead(bool dead) {
 		Del.Broadcast(GetPlayerId());
 	}
 	_isDead = dead;
-
 }
 
 int ACPlayerState::Coins() const

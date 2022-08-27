@@ -54,7 +54,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 		void SetDeaths(int val);
+	
+	UFUNCTION(BlueprintCallable)
+	int Diamonds() const { return _diamonds; }
 
+	void SetDiamonds(int val) { _diamonds = val; }
 protected:
 	//properties
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
@@ -62,6 +66,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _coins = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	int _diamonds = 0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _damageDone = 0;

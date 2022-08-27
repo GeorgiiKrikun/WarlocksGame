@@ -105,7 +105,12 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 		if (_HealthPoints <= 0.0f) {
 			if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
 			if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
-			onDeathDelegate.Broadcast();
+			if (!_isDead) {
+				onDeathDelegate.Broadcast();
+				FVector spawnLocation = this->GetActorLocation();
+				FRotator spawnRotation(0.0f, 0.0f, 0.0f);
+				ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+			}
 		}
 
 		if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDamageReceived(playerState->DamageReceived() + Damage);
@@ -113,8 +118,6 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 
 
 		return Damage;
-
-
 	}
 	else {
 		return 0;
@@ -150,11 +153,18 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 	if (_HealthPoints <= 0.0f) {
 		if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
 		if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
-		onDeathDelegate.Broadcast();
+		if (!_isDead) {
+			onDeathDelegate.Broadcast();
+			FVector spawnLocation = this->GetActorLocation();
+			FRotator spawnRotation(0.0f, 0.0f, 0.0f);
+			ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+		}
 	}
 
 	if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDamageReceived(playerState->DamageReceived() + Damage);
 	if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetDamageDone(instigatorPlayerState->DamageDone() + Damage);
+
+
 
 	return Damage;
 }
