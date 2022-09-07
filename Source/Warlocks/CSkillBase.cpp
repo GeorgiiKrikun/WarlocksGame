@@ -31,6 +31,8 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(UCSkillBase, _maxSkillLevel);
 	DOREPLIFETIME(UCSkillBase, _cooldown);
 	DOREPLIFETIME(UCSkillBase, _currentCooldown);
+	DOREPLIFETIME(UCSkillBase, _cooldownDiamond);
+	DOREPLIFETIME(UCSkillBase, _currentCooldownDiamond);
 }
 
 
@@ -41,6 +43,16 @@ void UCSkillBase::ServerSkillCast_Implementation(FVector location /*= FVector()*
 }
 
 void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
+{
+
+}
+
+void UCSkillBase::ServerCastDiamondUpgrade_Implementation(FVector location)
+{
+	_savedLocation = location;
+}
+
+void UCSkillBase::ServerAfterCastDiamondUpgrade_Implementation(FVector location)
 {
 
 }
@@ -68,6 +80,11 @@ ACWarlockMainPlayerController* UCSkillBase::getControllerThatPossessThisSkill()
 }
 
 int UCSkillBase::getRequiredInputType()
+{
+	return 0;
+}
+
+int UCSkillBase::getRequiredInputTypeDiamond()
 {
 	return 0;
 }

@@ -102,7 +102,4 @@ void ACWarlockMainPlayerController::reactOnPawnDeath()
 		character->SetDead(true);
 		OnPawnDeath.Broadcast();
 	}
-
-	//UnPossess();
-	//pawn->Destroy();
 }

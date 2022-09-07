@@ -33,6 +33,12 @@ public:
 	UFUNCTION(Server,Reliable)
 	virtual void ServerAfterSkillCasted(FVector location);
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	virtual void ServerCastDiamondUpgrade(FVector location);
+
+	UFUNCTION(Server, Reliable)
+	virtual void ServerAfterCastDiamondUpgrade(FVector location);
+
 	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
 	void BroadcastAnimationSkillCast();
 
@@ -47,6 +53,9 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable)
 	virtual int getRequiredInputType();
+
+	UFUNCTION(BlueprintCallable)
+	virtual int getRequiredInputTypeDiamond();
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	virtual void levelUp();
@@ -80,6 +89,12 @@ protected:
 	float _cooldown;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCooldown;
+
+	//properites
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _cooldownDiamond;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _currentCooldownDiamond;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _castTime = 0.0f; // by default, immediate
