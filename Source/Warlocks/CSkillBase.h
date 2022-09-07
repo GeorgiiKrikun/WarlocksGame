@@ -58,7 +58,9 @@ public:
 	virtual int getRequiredInputTypeDiamond();
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable)
-	virtual void levelUp();
+	void levelUp();
+
+	virtual void onLevelUp();
 
 	UFUNCTION(BlueprintCallable)
 	bool canBeLeveledUp();
@@ -80,6 +82,9 @@ public:
 
 	float CurrentCooldown() const { return _currentCooldown; }
 	void SetCurrentCooldown(float val) { _currentCooldown = val; }
+	bool HasDiamondUpgrade() const { return _hasDiamondUpgrade; }
+	void SetHasDiamondUpgrade(bool val) { _hasDiamondUpgrade = val; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -99,6 +104,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _castTime = 0.0f; // by default, immediate
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	float _castTimeDiamond = 0.0f; // by default, immediate
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _currentCastTime = 0.0f;
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -113,6 +120,12 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int _maxSkillLevel = 3;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	bool _hasDiamondUpgrade = false;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	bool _diamondCastPerformed = false;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<FText> _detailedDesctiption;

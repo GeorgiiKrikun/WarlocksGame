@@ -10,7 +10,7 @@ class UCSkillBase;
 class UMovementComponent;
 
 UCLASS()
-class WARLOCKS_API AActorSpawnedBySkill : public AActor 
+class WARLOCKS_API AActorSpawnedBySkill : public AActor
 { 
 	GENERATED_BODY() 
 	

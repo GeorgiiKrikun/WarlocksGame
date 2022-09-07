@@ -22,8 +22,6 @@ UCSkillBase::UCSkillBase()
 
 }
 
-
-
 void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -33,6 +31,9 @@ void UCSkillBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(UCSkillBase, _currentCooldown);
 	DOREPLIFETIME(UCSkillBase, _cooldownDiamond);
 	DOREPLIFETIME(UCSkillBase, _currentCooldownDiamond);
+	DOREPLIFETIME(UCSkillBase, _hasDiamondUpgrade);
+	DOREPLIFETIME(UCSkillBase, _diamondCastPerformed);
+
 }
 
 
@@ -44,17 +45,18 @@ void UCSkillBase::ServerSkillCast_Implementation(FVector location /*= FVector()*
 
 void UCSkillBase::ServerAfterSkillCasted_Implementation(FVector location)
 {
-
+	if (_hasDiamondUpgrade) _currentCooldownDiamond = _cooldownDiamond;
 }
 
 void UCSkillBase::ServerCastDiamondUpgrade_Implementation(FVector location)
 {
 	_savedLocation = location;
+	_diamondCastPerformed = true;
 }
 
 void UCSkillBase::ServerAfterCastDiamondUpgrade_Implementation(FVector location)
 {
-
+	_diamondCastPerformed = false;
 }
 
 void UCSkillBase::BroadcastAnimationSkillCast_Implementation()
@@ -101,6 +103,13 @@ void UCSkillBase::levelUp_Implementation()
 	if (state) state->SetCoins(state->Coins() - _costToLevelUpAtLevel[oldlevel]);
 
 	onSkillLevelChanged.Broadcast(0, 0);
+
+	onLevelUp();
+}
+
+void UCSkillBase::onLevelUp()
+{
+
 }
 
 bool UCSkillBase::canBeLeveledUp()
@@ -136,7 +145,9 @@ void UCSkillBase::BeginPlay()
 
 void UCSkillBase::startCastTime_Implementation()
 {
-	_currentCastTime = CastTime();
+	if (!_diamondCastPerformed) _currentCastTime = _castTime;
+	else _currentCastTime = _castTimeDiamond;
+
 	ACWarlockChar* warlock = Cast<ACWarlockChar>(GetOwner());
 	if (!warlock) return;
 	warlock->setCasting(this);
@@ -146,9 +157,12 @@ void UCSkillBase::startCastTime_Implementation()
 void UCSkillBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (_currentCooldownDiamond > 0.0f) _currentCooldownDiamond = _currentCooldownDiamond - DeltaTime;
 	if (CurrentCooldown() > 0.0f) SetCurrentCooldown(CurrentCooldown() - DeltaTime);
 	if (CurrentCastTime() > 0.0f) {
 		_currentCastTime = CurrentCastTime() - DeltaTime;
-		if (CurrentCastTime() <= 0.0f && GetOwner()->HasAuthority()) ServerAfterSkillCasted(_savedLocation);
+		if (CurrentCastTime() <= 0.0f && GetOwner()->HasAuthority())
+			if (!_diamondCastPerformed) ServerAfterSkillCasted(_savedLocation);
+			else ServerAfterCastDiamondUpgrade(_savedLocation);
 	}
 }

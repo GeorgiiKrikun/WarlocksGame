@@ -21,10 +21,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACFireballActorServer> _fireball;
 
+
 	void ServerSkillCast_Implementation(FVector location) override;
 
 	void ServerAfterSkillCasted_Implementation(FVector location) override;
 
+	void ServerCastDiamondUpgrade_Implementation(FVector location) override;
+	
+	void ServerAfterCastDiamondUpgrade_Implementation(FVector location) override;
+
+	void onLevelUp() override;
 
 	int getRequiredInputType() override;
 
@@ -47,5 +53,7 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float _sizeAndDamageUpgradeFactor = 1.5f;
+
+	ACFireballActorServer* _lastSpawnedFireball = nullptr;
 
 };
