@@ -15,6 +15,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "CSkillBase.h"
+#include "CGameStateBase.h"
 // Sets default values
 ACWarlockChar::ACWarlockChar() : ACharacter()
 {
@@ -64,12 +65,12 @@ void ACWarlockChar::BeginPlay()
 	
 }
 
-void ACWarlockChar::OnRep_Dead()
-{
-	UCapsuleComponent* capsule = this->GetCapsuleComponent();
-	if (_isDead)  capsule->SetCollisionResponseToChannels(_collisionDead);
-	else capsule->SetCollisionResponseToChannels(_collisionDefault);
-}
+//void ACWarlockChar::OnRep_Dead()
+//{
+////	UCapsuleComponent* capsule = this->GetCapsuleComponent();
+////	if (_isDead)  capsule->SetCollisionResponseToChannels(_collisionDead);
+////	else capsule->SetCollisionResponseToChannels(_collisionDefault);
+//}
 
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
@@ -106,8 +107,8 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 			if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
 			if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
 			if (!_isDead) {
-				onDeathDelegate.Broadcast();
 				FVector spawnLocation = this->GetActorLocation();
+				onDeathDelegate.Broadcast();
 				FRotator spawnRotation(0.0f, 0.0f, 0.0f);
 				ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 			}
@@ -154,8 +155,8 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 		if (playerState && !_isDead && gameMode->AreWeInMatch()) playerState->SetDeaths(playerState->Deaths() + 1);
 		if (instigatorPlayerState && !_isDead && gameMode->AreWeInMatch()) instigatorPlayerState->SetKills(instigatorPlayerState->Kills() + 1);
 		if (!_isDead) {
-			onDeathDelegate.Broadcast();
 			FVector spawnLocation = this->GetActorLocation();
+			onDeathDelegate.Broadcast();
 			FRotator spawnRotation(0.0f, 0.0f, 0.0f);
 			ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 		}
@@ -190,17 +191,17 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 	_isDead = val;
 	if (HasAuthority() && _isDead) {
 		GL("SET DEAD");
-		this->SetHidden(true);
-		UCapsuleComponent* capsule = this->GetCapsuleComponent();
-		capsule->SetCollisionResponseToChannels(_collisionDead);
+		//this->SetHidden(true);
+		//UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		//capsule->SetCollisionResponseToChannels(_collisionDead);
 	}
 	else if (HasAuthority() && !_isDead)
 	{
 		GL("SET UNDEAD");
 		_HealthPoints = MaxHealthPoints();
-		this->SetHidden(false);
-		UCapsuleComponent* capsule = this->GetCapsuleComponent();
-		capsule->SetCollisionResponseToChannels(_collisionDefault);
+		//this->SetHidden(false);
+		//UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		//capsule->SetCollisionResponseToChannels(_collisionDefault);
 	}
 }
 

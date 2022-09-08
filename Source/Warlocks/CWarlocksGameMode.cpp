@@ -117,6 +117,10 @@ void ACWarlocksGameMode::PostLogin(APlayerController* NewPlayer) {
 	if (!_damageStatistics._damageDoneMap.Contains(myController)) {
 		_damageStatistics._damageDoneMap.Add(myController, 0.0f);
 	}
+
+
+	
+
 }
 
 void ACWarlocksGameMode::ReactOnDeath()
@@ -164,6 +168,11 @@ void ACWarlocksGameMode::ReactOnEnterInterlude()
 
 	ACGameStateBase* gameState = GetGameState<ACGameStateBase>();
 	if (gameState) gameState->_areWeInMatch = false;
+	
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACDiamondActor::StaticClass(), OutActors);
+	for (auto diamond : OutActors) diamond->Destroy();
+
 
 	_currentTreshold = _beginThreshold;
 

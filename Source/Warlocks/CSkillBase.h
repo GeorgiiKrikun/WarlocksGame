@@ -65,6 +65,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool canBeLeveledUp();
 
+	UFUNCTION(BlueprintCallable)
+	bool canBeDiamondUpgraded();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void diamondUpgrade();
+
 	int SkillLevel() const { return _skillLevel; }
 
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnLevelChange"))
@@ -132,6 +138,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<int> _costToLevelUpAtLevel;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int _costToDiamondUpgrade = 3;
+
 
 
 public:

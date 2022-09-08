@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CWarlockChar.h"
 #include "GameFramework/GameState.h"
 #include "CGameStateBase.generated.h"
 
@@ -24,7 +25,10 @@ public:
 	float _thresholdValue;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
-		bool _areWeInMatch = true;
+	bool _areWeInMatch = true;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+	TArray<ACWarlockChar*>  _characters;
 
 
 	

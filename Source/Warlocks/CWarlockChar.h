@@ -82,11 +82,11 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _MaxHealthPoints;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing = OnRep_Dead)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	bool _isDead = false;
 
-	UFUNCTION()
-	void OnRep_Dead();
+//	UFUNCTION()
+//	void OnRep_Dead();
 
 	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 

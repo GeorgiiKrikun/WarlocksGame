@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "OnlineSubsystem.h"
+#include "CWarlockChar.h"
 #include "CWarlockMainPlayerController.generated.h"
 
 
@@ -51,7 +52,25 @@ public:
 
 
 
-//
+// cheats
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void lookAtPlayer(int playerId); 
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void Spectate();
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void SpectateNextPlayer();
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void SpectatePreviousPlayer();
+
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void sayControllerID();
+
+
 
 
 protected:
@@ -69,5 +88,7 @@ private:
 	IOnlineSubsystem* _system;
 	IOnlineFriendsPtr _friendsInterface;
 	IOnlineSessionPtr _sessionInterface;
+
+	ACWarlockChar* _currentlySpectated = nullptr;
 
 };

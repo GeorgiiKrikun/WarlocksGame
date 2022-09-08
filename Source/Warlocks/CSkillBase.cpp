@@ -119,6 +119,18 @@ bool UCSkillBase::canBeLeveledUp()
 	return true;
 }
 
+bool UCSkillBase::canBeDiamondUpgraded()
+{
+	if (_hasDiamondUpgrade) return false;
+	if (getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>()->Diamonds() < _costToDiamondUpgrade) return false;
+	return true;
+}
+
+void UCSkillBase::diamondUpgrade_Implementation()
+{
+	if (canBeDiamondUpgraded()) _hasDiamondUpgrade = true;
+}
+
 void UCSkillBase::OnRep_SkillLevel()
 {
 	onSkillLevelChanged.Broadcast(0, 0);

@@ -4,6 +4,8 @@
 #include "CDiamondActor.h"
 #include "CWarlockChar.h"
 #include "CPlayerState.h"
+#include "CWarlocksGameMode.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ACDiamondActor::ACDiamondActor()
@@ -37,7 +39,9 @@ void ACDiamondActor::BeginPlay()
 void ACDiamondActor::whenOverlapped(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ACWarlockChar* wc = Cast<ACWarlockChar>(otherActor);
-	if (wc && !wc->Dead() && HasAuthority() && wc->GetController() && wc->GetController()->GetPlayerState<ACPlayerState>()) {
+	if (wc && !wc->Dead() && HasAuthority() && wc->GetController() && wc->GetController()->GetPlayerState<ACPlayerState>() && 
+		Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld())) && 
+		Cast<ACWarlocksGameMode>(UGameplayStatics::GetGameMode(GetWorld()))->AreWeInMatch()) {
 		ACPlayerState* state = wc->GetController()->GetPlayerState<ACPlayerState>();
 		state->SetDiamonds(state->Diamonds() + 1);
 		Destroy();
