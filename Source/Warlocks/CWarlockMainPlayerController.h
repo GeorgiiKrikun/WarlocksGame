@@ -39,7 +39,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void onInterludeEnd();
 
-
 // ONLINE SUBSYSTEM INTERFACE
 	UFUNCTION(BlueprintCallable)
 	bool connectToSteam();
@@ -49,8 +48,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void scanSessions();
-
-
 
 // cheats
 
@@ -66,18 +63,19 @@ public:
 	UFUNCTION(BlueprintCallable, Exec)
 	void SpectatePreviousPlayer();
 
+	UFUNCTION(BlueprintCallable, Exec)
+	void SpectateMyself();
+
+	UFUNCTION()
+	void SpectateCharacter(ACWarlockChar* characterToSpectate);
 
 	UFUNCTION(BlueprintCallable, Exec)
 	void sayControllerID();
-
-
-
 
 protected:
 	void OnPossess(APawn* aPawn) override;
 
 	void OnUnPossess() override;
-
 
 	void BeginPlay() override;
 
@@ -85,10 +83,12 @@ private:
 	UFUNCTION()
 	void reactOnPawnDeath();
 
+	UFUNCTION()
+	void reactOnSpectatedPawnDeath();
+
 	IOnlineSubsystem* _system;
 	IOnlineFriendsPtr _friendsInterface;
 	IOnlineSessionPtr _sessionInterface;
-
 	ACWarlockChar* _currentlySpectated = nullptr;
 
 };

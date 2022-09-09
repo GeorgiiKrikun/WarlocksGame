@@ -45,7 +45,7 @@ void ACWarlocksGameMode::addBot()
 
 void ACWarlocksGameMode::addDamageStatisticsEntry(AController* from, float damage)
 {
-	GW("ADD DAMAGE STATISTICS ENTRY %d, %f", from, damage);
+	//GW("ADD DAMAGE STATISTICS ENTRY %d, %f", from, damage);
 	if (!_damageStatistics._damageDoneMap.Contains(from)) {
 		GE("Cannot add damage statistic entry, because controller was not registered in game mode");
 		return;     
@@ -181,7 +181,10 @@ void ACWarlocksGameMode::ReactOnEnterInterlude()
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		ACWarlockMainPlayerController* PlayerController = Cast<ACWarlockMainPlayerController>(Iterator->Get());
-		RespawnPlayer(PlayerController);
+		AActor* playerStart = FindPlayerStart(PlayerController);
+
+		if (playerStart) RespawnPlayer(PlayerController, false, true, playerStart->GetActorLocation(), playerStart->GetActorRotation());
+		else RespawnPlayer(PlayerController);
 	}
 	_bRespawnGuard = false;
 

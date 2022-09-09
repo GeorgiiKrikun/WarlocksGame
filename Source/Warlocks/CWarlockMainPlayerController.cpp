@@ -24,6 +24,7 @@ void ACWarlockMainPlayerController::OnPawnRestartClient_Implementation()
 
 void ACWarlockMainPlayerController::callOnInterludeBegin_Implementation(const FString& text)
 {
+	SpectateMyself();
 	onInterludeBegin(text);
 }
 
@@ -34,6 +35,7 @@ void ACWarlockMainPlayerController::onInterludeBegin_Implementation(const FStrin
 
 void ACWarlockMainPlayerController::callOnInterludeEnd_Implementation()
 {
+	SpectateMyself();
 	onInterludeEnd();
 }
 
@@ -92,8 +94,7 @@ void ACWarlockMainPlayerController::Spectate()
 	for (auto actor : actors) {
 		auto nextChar = Cast<ACWarlockChar>(actor);
 		if (nextChar && (nextChar != myChar) && (!nextChar->Dead())) {
-			SetViewTarget(nextChar);
-			_currentlySpectated = nextChar;
+			SpectateCharacter(nextChar);
 			break;
 		}
 	}
@@ -123,7 +124,7 @@ void ACWarlockMainPlayerController::SpectateNextPlayer()
 		while (i != currentIndex) {
 			auto nextChar = Cast<ACWarlockChar>(actors[i]);
 			if (nextChar && (nextChar != myChar) && (!nextChar->Dead())) {
-				SetViewTarget(nextChar);
+				SpectateCharacter(nextChar);
 				_currentlySpectated = nextChar;
 				return;
 			}
@@ -161,8 +162,7 @@ void ACWarlockMainPlayerController::SpectatePreviousPlayer()
 		while (i != currentIndex) {
 			auto nextChar = Cast<ACWarlockChar>(actors[i]);
 			if (nextChar && (nextChar != myChar) && (!nextChar->Dead())) {
-				SetViewTarget(nextChar);
-				_currentlySpectated = nextChar;
+				SpectateCharacter(nextChar);
 				return;
 			}
 			i = (actors.Num() + i - 1) % actors.Num();
@@ -171,6 +171,25 @@ void ACWarlockMainPlayerController::SpectatePreviousPlayer()
 
 	Spectate();
 
+}
+
+void ACWarlockMainPlayerController::SpectateMyself()
+{
+	SpectateCharacter(Cast<ACWarlockChar>(this->GetPawn()));
+}
+
+void ACWarlockMainPlayerController::SpectateCharacter(ACWarlockChar* characterToSpectate)
+{
+	if (!characterToSpectate) {
+		GW("No character to spectate, aborting");
+		return;
+	}
+
+	SetViewTarget(characterToSpectate);
+	GL("Character %s is now spectating character %s ", *this->GetPawn()->GetName(), *characterToSpectate->GetController()->GetPawn()->GetName());
+	_currentlySpectated = characterToSpectate;
+	characterToSpectate->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
+	characterToSpectate->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
 }
 
 void ACWarlockMainPlayerController::sayControllerID()
@@ -183,7 +202,7 @@ void ACWarlockMainPlayerController::OnPossess(APawn* aPawn)
 	Super::OnPossess(aPawn);
 	ACWarlockChar* character = Cast<ACWarlockChar>(aPawn);
 	if (!character) return;
-
+	SpectateMyself();
 	character->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnPawnDeath);
 }
 
@@ -204,6 +223,7 @@ void ACWarlockMainPlayerController::BeginPlay()
 void ACWarlockMainPlayerController::reactOnPawnDeath()
 {
 	GL("REACT ON PAWN DEATH");
+	//Spectate();
 	APawn* pawn = this->GetPawn();
 	if (!pawn) return;
 	if (HasAuthority()) {
@@ -212,4 +232,11 @@ void ACWarlockMainPlayerController::reactOnPawnDeath()
 		OnPawnDeath.Broadcast();
 		character->TeleportTo(FVector(0, 0, -900), character->GetActorRotation());
 	}
+}
+
+void ACWarlockMainPlayerController::reactOnSpectatedPawnDeath()
+{
+	GL(" Character %s is now dead, observed by %s spectating next character", *_currentlySpectated->GetController()->GetPawn()->GetName(), *this->GetPawn()->GetName());
+	//_currentlySpectated->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
+	SpectateNextPlayer();
 }
