@@ -65,12 +65,6 @@ void ACWarlockChar::BeginPlay()
 	
 }
 
-//void ACWarlockChar::OnRep_Dead()
-//{
-////	UCapsuleComponent* capsule = this->GetCapsuleComponent();
-////	if (_isDead)  capsule->SetCollisionResponseToChannels(_collisionDead);
-////	else capsule->SetCollisionResponseToChannels(_collisionDefault);
-//}
 
 float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
@@ -110,7 +104,7 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 				FVector spawnLocation = this->GetActorLocation();
 				onDeathDelegate.Broadcast();
 				FRotator spawnRotation(0.0f, 0.0f, 0.0f);
-				ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+				//ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 			}
 		}
 
@@ -158,7 +152,7 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 			FVector spawnLocation = this->GetActorLocation();
 			onDeathDelegate.Broadcast();
 			FRotator spawnRotation(0.0f, 0.0f, 0.0f);
-			ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+			//ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 		}
 	}
 
@@ -191,20 +185,42 @@ void ACWarlockChar::SetDead_Implementation(bool val)
 	_isDead = val;
 	if (HasAuthority() && _isDead) {
 		GL("SET DEAD");
-		//this->SetHidden(true);
-		//UCapsuleComponent* capsule = this->GetCapsuleComponent();
-		//capsule->SetCollisionResponseToChannels(_collisionDead);
+		this->GetMesh()->SetSimulatePhysics(true);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDead);
+		this->GetMovementComponent()->Deactivate();
 	}
 	else if (HasAuthority() && !_isDead)
 	{
 		GL("SET UNDEAD");
 		_HealthPoints = MaxHealthPoints();
-		//this->SetHidden(false);
-		//UCapsuleComponent* capsule = this->GetCapsuleComponent();
-		//capsule->SetCollisionResponseToChannels(_collisionDefault);
+		this->GetMesh()->SetSimulatePhysics(false);
+		this->GetMesh()->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		this->GetMesh()->SetRelativeRotation(_relativeMeshRotation);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDefault);
+		this->GetMovementComponent()->Activate();
+
 	}
 }
 
+void ACWarlockChar::OnRep_Dead()
+{
+	if (_isDead) {
+		this->GetMesh()->SetSimulatePhysics(true);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		this->GetMovementComponent()->Deactivate();
+		capsule->SetCollisionResponseToChannels(_collisionDead);
+	} else 
+	{
+		this->GetMesh()->SetSimulatePhysics(false);
+		this->GetMesh()->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		this->GetMovementComponent()->Activate();
+		this->GetMesh()->SetRelativeRotation(_relativeMeshRotation);
+		UCapsuleComponent* capsule = this->GetCapsuleComponent();
+		capsule->SetCollisionResponseToChannels(_collisionDefault);
+	}
+}	
 // Called every frame
 void ACWarlockChar::Tick(float DeltaTime)
 {
@@ -313,6 +329,13 @@ void ACWarlockChar::playFireballAnimation_Implementation()
 void ACWarlockChar::ClientImplementationOfFireballAnimation_Implementation()
 {
 
+}
+
+
+
+void ACWarlockChar::die()
+{
+	SetDead(true);
 }
 
 void ACWarlockChar::setInvulnerable_Implementation(bool invulnerable)

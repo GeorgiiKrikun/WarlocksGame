@@ -186,10 +186,10 @@ void ACWarlockMainPlayerController::SpectateCharacter(ACWarlockChar* characterTo
 	}
 
 	SetViewTarget(characterToSpectate);
-	GL("Character %s is now spectating character %s ", *this->GetPawn()->GetName(), *characterToSpectate->GetController()->GetPawn()->GetName());
+	//GL("Character %s is now spectating character %s ", *this->GetPawn()->GetName(), *characterToSpectate->GetController()->GetPawn()->GetName());
 	_currentlySpectated = characterToSpectate;
-	characterToSpectate->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
-	characterToSpectate->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
+	//characterToSpectate->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
+	//characterToSpectate->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
 }
 
 void ACWarlockMainPlayerController::sayControllerID()
@@ -230,13 +230,13 @@ void ACWarlockMainPlayerController::reactOnPawnDeath()
 		ACWarlockChar* character = Cast<ACWarlockChar>(pawn);
 		character->SetDead(true);
 		OnPawnDeath.Broadcast();
-		character->TeleportTo(FVector(0, 0, -900), character->GetActorRotation());
+		//character->TeleportTo(FVector(0, 0, -900), character->GetActorRotation());
 	}
 }
 
 void ACWarlockMainPlayerController::reactOnSpectatedPawnDeath()
 {
-	GL(" Character %s is now dead, observed by %s spectating next character", *_currentlySpectated->GetController()->GetPawn()->GetName(), *this->GetPawn()->GetName());
-	//_currentlySpectated->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
-	SpectateNextPlayer();
+//	GL(" Character %s is now dead, observed by %s spectating next character", *_currentlySpectated->GetController()->GetPawn()->GetName(), *this->GetPawn()->GetName());
+//	//_currentlySpectated->onDeathDelegate.RemoveDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
+//	SpectateNextPlayer();
 }

@@ -82,11 +82,11 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float _MaxHealthPoints;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_Dead)
 	bool _isDead = false;
 
-//	UFUNCTION()
-//	void OnRep_Dead();
+	UFUNCTION()
+	void OnRep_Dead();
 
 	float InternalTakeRadialDamage(float Damage, struct FRadialDamageEvent const& RadialDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -143,7 +143,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ClientImplementationOfFireballAnimation();
 
-
+	UFUNCTION(Exec)
+	void die();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystemComponent* _sacrificeAnimation;
@@ -167,6 +168,12 @@ public:
 	//Diamonds stuff
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<ACDiamondActor> _diamondClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	FVector _relativeMeshLocation;
+
+	UPROPERTY(EditDefaultsOnly)
+	FRotator _relativeMeshRotation;
 
 	public:
 
