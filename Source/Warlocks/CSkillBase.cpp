@@ -122,7 +122,8 @@ bool UCSkillBase::canBeLeveledUp()
 bool UCSkillBase::canBeDiamondUpgraded()
 {
 	if (_hasDiamondUpgrade) return false;
-	if (getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>()->Diamonds() < _costToDiamondUpgrade) return false;
+	int diamonds = getControllerThatPossessThisSkill()->GetPlayerState<ACPlayerState>()->Diamonds();
+	if (diamonds < _costToDiamondUpgrade) return false;
 	return true;
 }
 

@@ -69,6 +69,18 @@ public:
 	UFUNCTION()
 	void SpectateCharacter(ACWarlockChar* characterToSpectate);
 
+	UFUNCTION(Exec)
+	void SetNumberOfDiamonds(int N);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetNumberOfDiamonds(int N);
+
+	UFUNCTION(Exec)
+	void SetNumberOfCoins(int N);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetNumberOfCoins(int N);
+
 	UFUNCTION(BlueprintCallable, Exec)
 	void sayControllerID();
 

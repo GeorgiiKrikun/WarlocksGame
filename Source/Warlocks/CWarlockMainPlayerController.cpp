@@ -192,6 +192,26 @@ void ACWarlockMainPlayerController::SpectateCharacter(ACWarlockChar* characterTo
 	//characterToSpectate->onDeathDelegate.AddDynamic(this, &ACWarlockMainPlayerController::reactOnSpectatedPawnDeath);
 }
 
+void ACWarlockMainPlayerController::SetNumberOfDiamonds(int N)
+{
+	ServerSetNumberOfDiamonds(N);
+}
+
+void ACWarlockMainPlayerController::ServerSetNumberOfDiamonds_Implementation(int N)
+{
+	GetPlayerState<ACPlayerState>()->SetDiamonds(N);
+}
+
+void ACWarlockMainPlayerController::SetNumberOfCoins(int N)
+{
+	ServerSetNumberOfCoins(N);
+}
+
+void ACWarlockMainPlayerController::ServerSetNumberOfCoins_Implementation(int N)
+{
+	GetPlayerState<ACPlayerState>()->SetCoins(N);
+}
+
 void ACWarlockMainPlayerController::sayControllerID()
 {
 	

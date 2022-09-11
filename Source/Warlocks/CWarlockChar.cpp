@@ -104,7 +104,7 @@ float ACWarlockChar::InternalTakeRadialDamage(float Damage, struct FRadialDamage
 				FVector spawnLocation = this->GetActorLocation();
 				onDeathDelegate.Broadcast();
 				FRotator spawnRotation(0.0f, 0.0f, 0.0f);
-				//ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+				ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 			}
 		}
 
@@ -152,7 +152,7 @@ float ACWarlockChar::InternalTakePointDamage(float Damage, struct FPointDamageEv
 			FVector spawnLocation = this->GetActorLocation();
 			onDeathDelegate.Broadcast();
 			FRotator spawnRotation(0.0f, 0.0f, 0.0f);
-			//ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
+			ACDiamondActor* spawnedDiamond = Cast<ACDiamondActor>(GetWorld()->SpawnActor(_diamondClass, &spawnLocation, &spawnRotation));
 		}
 	}
 
