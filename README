@@ -1,0 +1,10 @@
+# Warlocks
+
+This is my online game I worked on for several months. It was inspired by everybody long forgotten map Warlocks from Warcraft 3. Apperently, the original map creator currently works on standalone game, https://www.warlockbrawl.com/. It is written in UE4 and has basic online interactions implemented such as:
+- Connection. Uses only the NULL online subsystem, but you can easily change it to e.g. Steam/EpicGames subsystem.
+- Some skill functionality implemented. There are 5 different skills properly working over network: Fireball, Teleport, Parry, Mine, Sacrifice. 
+- Character systems such as HP, damage, push- and pull back are implemented with smooth movement over the network (tested with ping up to 200)
+- In-game shop (not monetization one :) ) where you can buy skills and their upgrades.
+
+I have no time nor desire anymore to work on it, maybe somebody finds that useful. This inspiration definitely turned out not a 1 man work.
+
